@@ -1,0 +1,61 @@
+/* ============================================
+   Animations - Roleta Casino
+   ============================================ */
+
+/* ── Spin glow on viewport ── */
+.roulette--spinning .roulette__viewport {
+    /* subtle glow during spin */
+}
+
+/* ── Urgent timer ── */
+.roulette--urgent .status__text {
+    color: var(--color-red-light);
+}
+
+/* ── Balance flash ── */
+@keyframes balanceFlash {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+.balance--updated {
+    animation: balanceFlash 0.35s ease;
+}
+
+/* ── Bet button subtle pulse when betting open ── */
+[data-game-state="betting"] .panel__bet-btn:not(:disabled) {
+    animation: subtlePulse 2s ease infinite;
+}
+
+@keyframes subtlePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+}
+
+/* ── Entry animations ── */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.betting-panels {
+    animation: fadeSlideUp 0.4s ease 0.15s both;
+}
+
+.bet-input {
+    animation: fadeSlideUp 0.3s ease 0.05s both;
+}
+
+/* ── Skeleton loading ── */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease infinite;
+    border-radius: var(--radius-sm);
+}

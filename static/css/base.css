@@ -1,0 +1,123 @@
+/* ============================================
+   Base Styles & Reset
+   ============================================ */
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-family);
+    background: var(--bg-body);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.45;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+::selection {
+    background: rgba(242, 177, 12, 0.25);
+    color: var(--text-bright);
+}
+
+a {
+    color: var(--color-gold);
+    text-decoration: none;
+}
+
+img { max-width: 100%; display: block; }
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+}
+button:disabled { cursor: not-allowed; opacity: 0.45; }
+
+input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    border: none;
+    background: none;
+    color: inherit;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
+
+ul, ol { list-style: none; }
+
+.container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.main {
+    padding-top: calc(var(--header-height) + 12px);
+    padding-bottom: 40px;
+}
+
+/* ── Toast ── */
+.toast-container {
+    position: fixed;
+    top: calc(var(--header-height) + 12px);
+    right: 16px;
+    z-index: var(--z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    transform: translateX(120%);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: auto;
+    max-width: 360px;
+}
+
+.toast--visible { transform: translateX(0); }
+
+.toast--success { border-color: rgba(0,199,77,.3); }
+.toast--success i { color: var(--color-green); }
+
+.toast--error { border-color: rgba(232,64,62,.3); }
+.toast--error i { color: var(--color-red-light); }
+
+.toast--warning { border-color: rgba(242,177,12,.3); }
+.toast--warning i { color: var(--color-gold); }
+
+.toast--info { border-color: rgba(59,130,246,.3); }
+.toast--info i { color: var(--color-blue); }

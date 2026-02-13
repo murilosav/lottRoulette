@@ -1,0 +1,683 @@
+/* ============================================
+   Roulette Spinner - CSGOEmpire style
+   Large circular items, dark flat look,
+   "ROLLING" overlay in center
+   ============================================ */
+
+/* ════════════════════════════════════════════
+   LIVE STREAM
+   Always open, premium look with controls
+   ════════════════════════════════════════════ */
+
+.livestream {
+    margin-bottom: 14px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ── Top Bar ── */
+.livestream__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.livestream__info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* LIVE Badge */
+.livestream__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    background: rgba(232, 64, 62, 0.15);
+    color: var(--color-red-light);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+.livestream__badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-red);
+    animation: livePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.livestream__title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.livestream__viewers {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.livestream__viewers i {
+    font-size: 0.7rem;
+}
+
+/* ── Action Buttons ── */
+.livestream__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.livestream__action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    transition: all var(--transition-fast);
+}
+
+.livestream__action-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+}
+
+.livestream__action-btn--minimize i {
+    transition: transform 0.25s ease;
+}
+
+.livestream--collapsed .livestream__action-btn--minimize i {
+    transform: rotate(180deg);
+}
+
+/* ── Content Area ── */
+.livestream__content {
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 500px;
+}
+
+.livestream--collapsed .livestream__content {
+    max-height: 0;
+}
+
+/* ── Embed ── */
+.livestream__embed {
+    aspect-ratio: 21 / 9;
+    max-height: 340px;
+    position: relative;
+    overflow: hidden;
+    background: #0a0c10;
+}
+
+.livestream__embed iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* ════════════════════════════════════════════
+   PLACEHOLDER (Preview State)
+   ════════════════════════════════════════════ */
+
+.livestream__placeholder {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 220px;
+    overflow: hidden;
+}
+
+/* ── Animated Background ── */
+.placeholder__bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0c0e15 0%, #111520 40%, #0e1018 100%);
+}
+
+.placeholder__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    from { transform: translate(0, 0); }
+    to { transform: translate(40px, 40px); }
+}
+
+/* Floating glow orbs */
+.placeholder__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.3;
+    animation: glowFloat 8s ease-in-out infinite;
+}
+
+.placeholder__glow--1 {
+    width: 200px;
+    height: 200px;
+    background: var(--color-red);
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.placeholder__glow--2 {
+    width: 160px;
+    height: 160px;
+    background: var(--color-white);
+    top: 20%;
+    right: 15%;
+    animation-delay: -3s;
+    opacity: 0.2;
+}
+
+.placeholder__glow--3 {
+    width: 180px;
+    height: 180px;
+    background: var(--color-black-light);
+    bottom: 5%;
+    left: 40%;
+    animation-delay: -5s;
+    opacity: 0.25;
+}
+
+@keyframes glowFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(15px, -20px) scale(1.1); }
+    50% { transform: translate(-10px, 10px) scale(0.95); }
+    75% { transform: translate(20px, 15px) scale(1.05); }
+}
+
+/* ── Center Content ── */
+.placeholder__center {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 24px;
+    text-align: center;
+}
+
+/* Animated ring icon */
+.placeholder__icon-ring {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid rgba(242, 177, 12, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    animation: ringPulse 3s ease-in-out infinite;
+    position: relative;
+}
+
+.placeholder__icon-ring::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid rgba(242, 177, 12, 0.08);
+    animation: ringPulse 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes ringPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.08); opacity: 0.7; }
+}
+
+.placeholder__icon-ring-inner {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(242, 177, 12, 0.15), rgba(242, 177, 12, 0.05));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder__icon-ring-inner i {
+    font-size: 1.3rem;
+    color: var(--color-gold);
+}
+
+.placeholder__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 6px;
+}
+
+.placeholder__subtitle {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    max-width: 320px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+
+/* Feature pills */
+.placeholder__features {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.placeholder__feature {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.placeholder__feature i {
+    font-size: 0.65rem;
+    color: var(--color-gold);
+}
+
+/* ── Mini roulette table at bottom ── */
+.placeholder__table {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.placeholder__roulette-mini {
+    display: flex;
+    gap: 4px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mini-slot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    animation: miniSlotPulse 2s ease-in-out infinite;
+}
+
+.mini-slot--red { background: var(--color-red); animation-delay: 0s; }
+.mini-slot--black { background: var(--color-black-light); animation-delay: 0.15s; }
+.mini-slot--gold { background: var(--color-white); animation-delay: 0.3s; box-shadow: 0 0 8px rgba(242,177,12,.3); }
+
+@keyframes miniSlotPulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* ════════════════════════════════════════════
+   ROULETTE SPINNER
+   ════════════════════════════════════════════ */
+
+.roulette {
+    position: relative;
+    margin-bottom: 14px;
+}
+
+/* ── Timer Bar ── */
+.roulette__timer {
+    height: 3px;
+    background: var(--bg-tertiary);
+    border-radius: 2px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.timer__bar {
+    height: 100%;
+    width: 0%;
+    background: var(--color-green);
+    border-radius: 2px;
+    transition: width 1s linear;
+}
+
+.timer__bar--urgent {
+    background: var(--color-red);
+    animation: timerPulse 0.5s ease infinite;
+}
+
+@keyframes timerPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ── Viewport ── */
+.roulette__viewport {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+/* Edge fades */
+.roulette__viewport::before,
+.roulette__viewport::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 140px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.roulette__viewport::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--bg-body) 0%, transparent 100%);
+}
+
+.roulette__viewport::after {
+    right: 0;
+    background: linear-gradient(-90deg, var(--bg-body) 0%, transparent 100%);
+}
+
+/* ── Center Indicator ── */
+.roulette__indicator {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: var(--z-overlay);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    pointer-events: none;
+}
+
+.roulette__indicator::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 12px solid var(--color-gold);
+    filter: drop-shadow(0 2px 4px rgba(242, 177, 12, 0.5));
+}
+
+.roulette__indicator::after {
+    content: '';
+    width: 2px;
+    flex: 1;
+    background: linear-gradient(180deg, rgba(242,177,12,.6), transparent 70%);
+}
+
+/* ── Rolling Overlay ── */
+.roulette__rolling-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: var(--z-overlay);
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.roulette__rolling-overlay.active {
+    opacity: 1;
+}
+
+.rolling__label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.rolling__countdown {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--text-bright);
+    text-shadow: 0 2px 12px rgba(0,0,0,.6);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Strip ── */
+.roulette__strip {
+    display: flex;
+    gap: var(--item-gap);
+    padding: 0 50%;
+    will-change: transform;
+}
+
+/* ── Items (Large circles) ── */
+.roulette__item {
+    flex-shrink: 0;
+    width: var(--item-size);
+    height: var(--item-size);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    user-select: none;
+}
+
+.roulette__number {
+    font-weight: 800;
+    font-size: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Red Item */
+.roulette__item--red {
+    background: radial-gradient(circle at 35% 35%, var(--color-red-light), var(--color-red-dark));
+    box-shadow:
+        inset 0 -3px 6px rgba(0,0,0,.25),
+        inset 0 2px 4px rgba(255,255,255,.12),
+        0 4px 14px rgba(232,64,62,.25);
+    color: #fff;
+}
+
+/* Black Item */
+.roulette__item--black {
+    background: radial-gradient(circle at 35% 35%, var(--color-black-light), var(--color-black-dark));
+    box-shadow:
+        inset 0 -3px 6px rgba(0,0,0,.3),
+        inset 0 2px 4px rgba(255,255,255,.06),
+        0 4px 14px rgba(50,54,68,.3);
+    color: var(--text-secondary);
+}
+
+/* White / Gold Item (special) */
+.roulette__item--white {
+    background: radial-gradient(circle at 35% 35%, var(--color-white-light), var(--color-white-dark));
+    box-shadow:
+        inset 0 -3px 6px rgba(0,0,0,.2),
+        inset 0 2px 4px rgba(255,255,255,.25),
+        0 4px 18px rgba(242,177,12,.3);
+    color: #1a1a2e;
+}
+
+.roulette__item--white .roulette__number {
+    text-shadow: 0 1px 2px rgba(255,255,255,.2);
+}
+
+/* ── Winner glow ── */
+.roulette__item--winner {
+    animation: winnerPulse 0.5s ease 3;
+}
+
+@keyframes winnerPulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.06); filter: brightness(1.15); }
+}
+
+/* ── Status ── */
+.roulette__status {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.status__text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.result--red { color: var(--color-red-light); }
+.result--black { color: var(--text-primary); }
+.result--white { color: var(--color-white-light); font-weight: 800; }
+
+/* ════════════════════════════════════════════
+   PREVIOUS ROLLS
+   ════════════════════════════════════════════ */
+
+.previous-rolls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    padding: 8px 0;
+}
+
+.previous-rolls__label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+}
+
+.previous-rolls__list {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.previous-rolls__list::-webkit-scrollbar { display: none; }
+
+/* ── Roll circles ── */
+.roll {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    cursor: default;
+    transition: transform var(--transition-fast);
+}
+
+.roll:hover { transform: scale(1.15); }
+
+.roll--red {
+    background: var(--color-red);
+    color: #fff;
+}
+
+.roll--black {
+    background: var(--color-black);
+    color: var(--text-secondary);
+}
+
+.roll--white {
+    background: var(--color-white);
+    color: #1a1a2e;
+}
+
+.roll:first-child {
+    animation: rollPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes rollPop {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ── Stats ── */
+.previous-rolls__stats {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+}
+
+.stats__item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.stats__item--last {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+.stats__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.stats__dot--red { background: var(--color-red); }
+.stats__dot--white { background: var(--color-white); }
+.stats__dot--black { background: var(--color-black); }

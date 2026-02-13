@@ -1,0 +1,234 @@
+/* ============================================
+   Betting UI - CSGOEmpire style
+   Flat dark panels, clean inputs
+   ============================================ */
+
+/* ════════════════════════════════════════════
+   BET INPUT BAR
+   ════════════════════════════════════════════ */
+
+.bet-input {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 720px;
+    margin: 0 auto 14px;
+}
+
+.bet-input__field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    height: 38px;
+    flex: 1;
+    min-width: 0;
+    transition: border-color var(--transition-fast);
+}
+
+.bet-input__field:focus-within {
+    border-color: var(--color-gold);
+}
+
+.bet-input__icon {
+    color: var(--color-gold);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.bet-input__amount {
+    flex: 1;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-bright);
+    width: 100%;
+    height: 100%;
+}
+
+.bet-input__amount::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* ── Quick Buttons ── */
+.bet-input__actions {
+    display: flex;
+    gap: 4px;
+}
+
+.bet-action {
+    height: 38px;
+    padding: 0 12px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+}
+
+.bet-action:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+.bet-action:active {
+    transform: scale(0.95);
+}
+
+.bet-action[data-action="clear"] { color: var(--text-muted); }
+
+.bet-action[data-action="max"] {
+    color: var(--color-gold);
+}
+
+/* ════════════════════════════════════════════
+   BETTING PANELS (3 columns)
+   ════════════════════════════════════════════ */
+
+.betting-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+/* ── Panel Base ── */
+.panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 380px;
+}
+
+/* ── Panel Header ── */
+.panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+}
+
+/* ── Place Bet Button ── */
+.panel__bet-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    background: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    transition: opacity var(--transition-fast);
+}
+
+.panel__bet-btn:hover:not(:disabled) {
+    opacity: 0.8;
+}
+
+.panel__bet-btn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.panel__bet-btn--disabled {
+    opacity: 0.35 !important;
+}
+
+/* Icon circles in button (like CSGOEmpire) */
+.panel__bet-btn i {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+}
+
+/* Red button */
+.panel__bet-btn--red {
+    color: var(--color-red-light);
+}
+
+.panel__bet-btn--red i {
+    background: var(--color-red);
+    color: #fff;
+    box-shadow: 0 2px 8px var(--color-red-glow);
+}
+
+/* White/Gold button */
+.panel__bet-btn--white {
+    color: var(--color-white);
+}
+
+.panel__bet-btn--white i {
+    background: var(--color-white);
+    color: #1a1a2e;
+    box-shadow: 0 2px 8px var(--color-white-glow);
+}
+
+/* Black button */
+.panel__bet-btn--black {
+    color: var(--color-red-light);
+}
+
+.panel__bet-btn--black i {
+    background: var(--color-black-light);
+    color: var(--text-secondary);
+    box-shadow: 0 2px 8px var(--color-black-glow);
+}
+
+/* ── Multiplier Label ── */
+.panel__multiplier {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+}
+
+.panel__multiplier--white {
+    color: var(--color-gold);
+}
+
+/* ── Panel Info Row ── */
+.panel__info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.panel__bets-count {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.panel__bets-count span {
+    color: var(--text-primary);
+}
+
+.panel__bets-total {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-bright);
+}
+
+.panel__bets-total i {
+    color: var(--color-gold);
+    font-size: 0.7rem;
+}

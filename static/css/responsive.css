@@ -1,0 +1,144 @@
+/* ============================================
+   Responsive - Roleta Casino
+   ============================================ */
+
+@media (max-width: 1024px) {
+    :root {
+        --item-size: 75px;
+        --item-gap: 10px;
+    }
+
+    .roulette__viewport { height: 105px; }
+
+    .livestream__embed { aspect-ratio: 21 / 9; }
+}
+
+@media (max-width: 768px) {
+    .container { padding: 0 10px; }
+
+    .profile__name { display: none; }
+    .profile__trigger > i:last-child { display: none; }
+
+    :root {
+        --item-size: 60px;
+        --item-gap: 8px;
+    }
+
+    .roulette__viewport { height: 85px; }
+    .roulette__viewport::before,
+    .roulette__viewport::after { width: 80px; }
+    .roulette__number { font-size: 1.1rem; }
+
+    .rolling__countdown { font-size: 1.6rem; }
+
+    /* Livestream */
+    .livestream__embed { aspect-ratio: 16 / 9; max-height: 280px; }
+    .livestream__title { display: none; }
+
+    .placeholder__icon-ring { width: 56px; height: 56px; }
+    .placeholder__icon-ring-inner { width: 40px; height: 40px; }
+    .placeholder__icon-ring-inner i { font-size: 1rem; }
+    .placeholder__title { font-size: 0.95rem; }
+    .placeholder__subtitle { font-size: 0.75rem; margin-bottom: 12px; }
+    .placeholder__glow { filter: blur(40px); }
+    .placeholder__glow--1 { width: 120px; height: 120px; }
+    .placeholder__glow--2 { width: 100px; height: 100px; }
+    .placeholder__glow--3 { width: 110px; height: 110px; }
+
+    .previous-rolls {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .roll { width: 24px; height: 24px; font-size: 0.6rem; }
+
+    /* Bet input stacks */
+    .bet-input {
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
+
+    .bet-input__field { width: 100%; }
+
+    .bet-input__actions {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .bet-action {
+        height: 34px;
+        padding: 0 10px;
+        font-size: 0.75rem;
+    }
+
+    /* Panels stack */
+    .betting-panels {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .panel { min-height: 240px; }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --item-size: 48px;
+        --item-gap: 6px;
+        --header-height: 50px;
+    }
+
+    .roulette__viewport { height: 70px; }
+    .roulette__viewport::before,
+    .roulette__viewport::after { width: 40px; }
+    .roulette__number { font-size: 0.9rem; }
+
+    .rolling__countdown { font-size: 1.2rem; }
+    .rolling__label { font-size: 0.55rem; }
+
+    .roulette__indicator::before {
+        border-left-width: 6px;
+        border-right-width: 6px;
+        border-top-width: 9px;
+    }
+
+    .header__logo span { font-size: 0.95rem; }
+    .header__logo i { font-size: 1rem; }
+
+    .balance__amount { font-size: 0.82rem; min-width: 45px; }
+    .header__balance { padding: 3px 3px 3px 10px; height: 34px; }
+    .balance__deposit { width: 26px; height: 26px; }
+
+    .bet-action { height: 32px; padding: 0 8px; font-size: 0.7rem; }
+
+    /* Livestream */
+    .livestream__embed { aspect-ratio: 16 / 9; max-height: 200px; }
+    .livestream__topbar { padding: 6px 10px; }
+    .livestream__badge { font-size: 0.6rem; padding: 2px 7px; }
+    .livestream__viewers { font-size: 0.7rem; }
+    .livestream__action-btn { width: 28px; height: 28px; font-size: 0.7rem; }
+
+    .placeholder__features { gap: 5px; }
+    .placeholder__feature { font-size: 0.65rem; padding: 3px 8px; }
+    .placeholder__table { bottom: 8px; }
+    .mini-slot { width: 14px; height: 14px; }
+    .placeholder__subtitle { display: none; }
+
+    .panel__bet-btn { font-size: 0.85rem; }
+    .panel__bet-btn i { width: 28px; height: 28px; font-size: 0.75rem; }
+
+    .player-entry { padding: 5px 10px; }
+    .player-entry__avatar { width: 24px; height: 24px; }
+    .player-entry__name { font-size: 0.75rem; }
+    .player-entry__amount { font-size: 0.78rem; }
+    .player-entry__level { font-size: 0.58rem; padding: 1px 3px; }
+
+    .toast { max-width: calc(100vw - 30px); font-size: 0.78rem; padding: 8px 12px; }
+}
+
+@media (hover: none) {
+    .bet-action:hover { background: var(--bg-tertiary); color: var(--text-secondary); border-color: var(--border-color); }
+    .player-entry:hover { background: transparent; }
+    .roll:hover { transform: none; }
+}

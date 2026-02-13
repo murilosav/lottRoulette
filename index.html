@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Roleta ao vivo - Cassino Online">
+    <title>Roleta | Cassino ao Vivo</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="static/css/variables.css">
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/header.css">
+    <link rel="stylesheet" href="static/css/roulette.css">
+    <link rel="stylesheet" href="static/css/betting.css">
+    <link rel="stylesheet" href="static/css/players.css">
+    <link rel="stylesheet" href="static/css/animations.css">
+    <link rel="stylesheet" href="static/css/responsive.css">
+</head>
+<body data-game-state="idle">
+
+    <!-- ══════════════════════════════════════════
+         HEADER
+         ══════════════════════════════════════════ -->
+    <header class="header" id="header">
+        <div class="header__inner">
+            <!-- Logo -->
+            <div class="header__left">
+                <a href="/" class="header__logo">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>ROLETA</span>
+                </a>
+            </div>
+
+            <!-- Balance + Profile -->
+            <div class="header__right">
+                <!-- Wallet / Balance -->
+                <div class="header__balance" id="userBalance">
+                    <i class="fas fa-coins"></i>
+                    <span class="balance__amount" id="balanceAmount">0,00</span>
+                    <button class="balance__deposit" id="depositBtn" title="Depositar">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <!-- User Profile -->
+                <div class="header__profile" id="userProfile">
+                    <div class="profile__trigger" id="profileTrigger">
+                        <img class="profile__avatar"
+                             src="https://ui-avatars.com/api/?name=U&background=1a1a3a&color=fff&size=40&bold=true&format=svg"
+                             alt="Avatar"
+                             id="profileAvatar">
+                        <span class="profile__name" id="profileName">Visitante</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+
+                    <!-- Dropdown Menu -->
+                    <div class="profile__dropdown" id="profileDropdown">
+                        <a href="#" class="dropdown__item">
+                            <i class="fas fa-user"></i> Perfil
+                        </a>
+                        <a href="#" class="dropdown__item">
+                            <i class="fas fa-wallet"></i> Carteira
+                        </a>
+                        <a href="#" class="dropdown__item">
+                            <i class="fas fa-history"></i> Histórico
+                        </a>
+                        <a href="#" class="dropdown__item">
+                            <i class="fas fa-shield-alt"></i> Fairness
+                        </a>
+                        <a href="#" class="dropdown__item">
+                            <i class="fas fa-cog"></i> Configurações
+                        </a>
+                        <div class="dropdown__divider"></div>
+                        <a href="#" class="dropdown__item dropdown__item--logout">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════
+         MAIN CONTENT
+         ══════════════════════════════════════════ -->
+    <main class="main">
+        <div class="container">
+
+            <!-- ────── Live Stream ────── -->
+            <div class="livestream" id="livestream">
+                <!-- Top bar -->
+                <div class="livestream__topbar">
+                    <div class="livestream__info">
+                        <span class="livestream__badge">
+                            <span class="livestream__badge-dot"></span>
+                            AO VIVO
+                        </span>
+                        <span class="livestream__title">Roleta Oficial</span>
+                        <span class="livestream__viewers">
+                            <i class="fas fa-eye"></i>
+                            <span id="viewerCount">1.247</span>
+                        </span>
+                    </div>
+                    <div class="livestream__actions">
+                        <button class="livestream__action-btn" id="soundToggle" title="Som">
+                            <i class="fas fa-volume-up" id="soundIcon"></i>
+                        </button>
+                        <button class="livestream__action-btn" id="fullscreenBtn" title="Tela cheia">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="livestream__action-btn livestream__action-btn--minimize" id="livestreamToggle" title="Minimizar">
+                            <i class="fas fa-chevron-up" id="livestreamArrow"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stream content -->
+                <div class="livestream__content" id="livestreamContainer">
+                    <div class="livestream__embed" id="livestreamEmbed">
+                        <!--
+                            Django: Replace placeholder with actual iframe:
+                            <iframe src="https://player.twitch.tv/?channel=CHANNEL&parent=yourdomain.com" allowfullscreen></iframe>
+                        -->
+                        <div class="livestream__placeholder" id="livestreamPlaceholder">
+                            <!-- Animated background -->
+                            <div class="placeholder__bg">
+                                <div class="placeholder__grid"></div>
+                                <div class="placeholder__glow placeholder__glow--1"></div>
+                                <div class="placeholder__glow placeholder__glow--2"></div>
+                                <div class="placeholder__glow placeholder__glow--3"></div>
+                            </div>
+
+                            <!-- Center content -->
+                            <div class="placeholder__center">
+                                <div class="placeholder__icon-ring">
+                                    <div class="placeholder__icon-ring-inner">
+                                        <i class="fas fa-broadcast-tower"></i>
+                                    </div>
+                                </div>
+                                <h3 class="placeholder__title">Transmissão ao Vivo</h3>
+                                <p class="placeholder__subtitle">Acompanhe os resultados da roleta em tempo real</p>
+                                <div class="placeholder__features">
+                                    <span class="placeholder__feature">
+                                        <i class="fas fa-shield-alt"></i> Verificável
+                                    </span>
+                                    <span class="placeholder__feature">
+                                        <i class="fas fa-bolt"></i> Tempo real
+                                    </span>
+                                    <span class="placeholder__feature">
+                                        <i class="fas fa-lock"></i> Seguro
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Dealer table overlay -->
+                            <div class="placeholder__table">
+                                <div class="placeholder__roulette-mini">
+                                    <span class="mini-slot mini-slot--red"></span>
+                                    <span class="mini-slot mini-slot--black"></span>
+                                    <span class="mini-slot mini-slot--red"></span>
+                                    <span class="mini-slot mini-slot--gold"></span>
+                                    <span class="mini-slot mini-slot--black"></span>
+                                    <span class="mini-slot mini-slot--red"></span>
+                                    <span class="mini-slot mini-slot--black"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ────── Roulette Spinner ────── -->
+            <div class="roulette" id="roulette">
+                <!-- Timer Bar -->
+                <div class="roulette__timer" id="rouletteTimer">
+                    <div class="timer__bar" id="timerBar"></div>
+                </div>
+
+                <!-- Spinning Viewport -->
+                <div class="roulette__viewport" id="rouletteViewport">
+                    <div class="roulette__indicator"></div>
+                    <div class="roulette__strip" id="rouletteStrip">
+                        <!-- Generated dynamically by roulette.js -->
+                    </div>
+                    <!-- ROLLING overlay (like CSGOEmpire) -->
+                    <div class="roulette__rolling-overlay" id="rollingOverlay">
+                        <div class="rolling__label">ROLLING</div>
+                        <div class="rolling__countdown" id="rollingCountdown">0.00</div>
+                    </div>
+                </div>
+
+                <!-- Status Text -->
+                <div class="roulette__status" id="rouletteStatus">
+                    <span class="status__text" id="statusText">Aguardando rodada...</span>
+                </div>
+            </div>
+
+            <!-- ────── Previous Rolls ────── -->
+            <div class="previous-rolls" id="previousRolls">
+                <div class="previous-rolls__label">ÚLTIMAS JOGADAS</div>
+                <div class="previous-rolls__list" id="rollsList">
+                    <!-- Generated dynamically -->
+                </div>
+                <div class="previous-rolls__stats" id="rollsStats">
+                    <span class="stats__item stats__item--last">ÚLTIMAS 100</span>
+                    <span class="stats__item stats__item--red">
+                        <span class="stats__dot stats__dot--red"></span>
+                        <span id="statsRed">0</span>
+                    </span>
+                    <span class="stats__item stats__item--white">
+                        <span class="stats__dot stats__dot--white"></span>
+                        <span id="statsWhite">0</span>
+                    </span>
+                    <span class="stats__item stats__item--black">
+                        <span class="stats__dot stats__dot--black"></span>
+                        <span id="statsBlack">0</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- ────── Bet Amount Input ────── -->
+            <div class="bet-input" id="betInput">
+                <div class="bet-input__field">
+                    <i class="fas fa-coins bet-input__icon"></i>
+                    <input
+                        type="number"
+                        class="bet-input__amount"
+                        id="betAmount"
+                        placeholder="Valor da aposta..."
+                        min="0.01"
+                        step="0.01"
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="bet-input__actions">
+                    <button class="bet-action" data-action="clear">LIMPAR</button>
+                    <button class="bet-action" data-action="add" data-value="0.01">+0.01</button>
+                    <button class="bet-action" data-action="add" data-value="0.1">+0.1</button>
+                    <button class="bet-action" data-action="add" data-value="1">+1</button>
+                    <button class="bet-action" data-action="add" data-value="10">+10</button>
+                    <button class="bet-action" data-action="add" data-value="100">+100</button>
+                    <button class="bet-action" data-action="half">1/2</button>
+                    <button class="bet-action" data-action="double">X2</button>
+                    <button class="bet-action" data-action="max">MAX</button>
+                </div>
+            </div>
+
+            <!-- ────── Betting Panels ────── -->
+            <div class="betting-panels" id="bettingPanels">
+
+                <!-- RED Panel -->
+                <div class="panel panel--red" id="panelRed">
+                    <div class="panel__header">
+                        <button class="panel__bet-btn panel__bet-btn--red" id="betRed" data-color="red">
+                            <i class="fas fa-fire"></i>
+                            <span>APOSTAR</span>
+                        </button>
+                        <span class="panel__multiplier">PAGA 2x</span>
+                    </div>
+                    <div class="panel__info">
+                        <span class="panel__bets-count">
+                            <span id="redBetsCount">0</span> Apostas Total
+                        </span>
+                        <span class="panel__bets-total">
+                            <i class="fas fa-coins"></i>
+                            <span id="redBetsTotal">0.00</span>
+                        </span>
+                    </div>
+                    <div class="panel__players" id="redPlayers">
+                        <!-- Player entries generated by players.js -->
+                    </div>
+                </div>
+
+                <!-- WHITE Panel (Special - 20x) -->
+                <div class="panel panel--white" id="panelWhite">
+                    <div class="panel__header">
+                        <button class="panel__bet-btn panel__bet-btn--white" id="betWhite" data-color="white">
+                            <i class="fas fa-star"></i>
+                            <span>APOSTAR</span>
+                        </button>
+                        <span class="panel__multiplier panel__multiplier--white">PAGA 20x</span>
+                    </div>
+                    <div class="panel__info">
+                        <span class="panel__bets-count">
+                            <span id="whiteBetsCount">0</span> Apostas Total
+                        </span>
+                        <span class="panel__bets-total">
+                            <i class="fas fa-coins"></i>
+                            <span id="whiteBetsTotal">0.00</span>
+                        </span>
+                    </div>
+                    <div class="panel__players" id="whitePlayers">
+                        <!-- Player entries generated by players.js -->
+                    </div>
+                </div>
+
+                <!-- BLACK Panel -->
+                <div class="panel panel--black" id="panelBlack">
+                    <div class="panel__header">
+                        <button class="panel__bet-btn panel__bet-btn--black" id="betBlack" data-color="black">
+                            <i class="fas fa-moon"></i>
+                            <span>APOSTAR</span>
+                        </button>
+                        <span class="panel__multiplier">PAGA 2x</span>
+                    </div>
+                    <div class="panel__info">
+                        <span class="panel__bets-count">
+                            <span id="blackBetsCount">0</span> Apostas Total
+                        </span>
+                        <span class="panel__bets-total">
+                            <i class="fas fa-coins"></i>
+                            <span id="blackBetsTotal">0.00</span>
+                        </span>
+                    </div>
+                    <div class="panel__players" id="blackPlayers">
+                        <!-- Player entries generated by players.js -->
+                    </div>
+                </div>
+
+            </div>
+            <!-- /betting-panels -->
+
+        </div>
+        <!-- /container -->
+    </main>
+
+    <!-- ══════════════════════════════════════════
+         TOAST NOTIFICATIONS
+         ══════════════════════════════════════════ -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ══════════════════════════════════════════
+         SCRIPTS
+         Load order matters: config → services → components → app
+         ══════════════════════════════════════════ -->
+    <script src="static/js/config.js"></script>
+    <script src="static/js/api.js"></script>
+    <script src="static/js/websocket.js"></script>
+    <script src="static/js/roulette.js"></script>
+    <script src="static/js/betting.js"></script>
+    <script src="static/js/players.js"></script>
+    <script src="static/js/app.js"></script>
+
+</body>
+</html>
