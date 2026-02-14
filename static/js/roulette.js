@@ -144,8 +144,7 @@ class RouletteEngine {
             const targetIndex = (targetRepetition * sequenceLength) + indexInSequence;
 
             const targetPosition = targetIndex * itemWidth;
-            const randomOffset = (Math.random() - 0.5) * (ITEM_SIZE * 0.5);
-            const translateX = -(targetPosition - centerOffset + randomOffset);
+            const translateX = -(targetPosition - centerOffset);
 
             // Show ROLLING countdown overlay (like CSGOEmpire)
             this._startRollingCountdown(SPIN_DURATION);

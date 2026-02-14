@@ -44,7 +44,10 @@ const CONFIG = {
         MULTIPLIERS: {
             red: 2,
             black: 2,
-            white: 20
+            white: 20,
+            straight: 14,  // Single number bet
+            odd: 2,
+            even: 2
         },
         BETTING_TIME: 15, // seconds
     },

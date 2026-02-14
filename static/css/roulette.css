@@ -15,9 +15,7 @@
     overflow: hidden;
     border: 1px solid var(--border-color);
     background: var(--bg-card);
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
 }
 
 /* ── Top Bar ── */
@@ -120,6 +118,8 @@
     overflow: hidden;
     transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     max-height: 500px;
+    text-align: center;
+    text-align: -webkit-center;
 }
 
 .livestream--collapsed .livestream__content {

@@ -23,11 +23,15 @@ class App {
         rouletteEngine.init();
         bettingManager.init();
         playersManager.init();
+        casinoWheel.init();
+        chipManager.init();
 
         // Setup UI interactions
         this._setupProfileDropdown();
         this._setupSoundToggle();
         this._setupLivestreamToggle();
+        this._setupViewToggle();
+        this._setupTableBetting();
 
         // Connect to backend or start demo
         if (CONFIG.DEMO_MODE) {
@@ -44,6 +48,108 @@ class App {
     /* ═══════════════════════════════════════════
        UI Setup
        ═══════════════════════════════════════════ */
+
+    _setupViewToggle() {
+        const toggleContainer = document.getElementById('viewToggle');
+        if (!toggleContainer) return;
+
+        const btns = toggleContainer.querySelectorAll('.view-toggle__btn');
+        const modernView = document.getElementById('bettingPanels');
+        const classicView = document.getElementById('classicView');
+
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const view = btn.dataset.view;
+
+                // Update active button
+                btns.forEach(b => b.classList.remove('view-toggle__btn--active'));
+                btn.classList.add('view-toggle__btn--active');
+
+                // Toggle views
+                if (view === 'modern') {
+                    modernView.classList.add('betting-view--active');
+                    classicView.classList.remove('betting-view--active');
+                } else {
+                    modernView.classList.remove('betting-view--active');
+                    classicView.classList.add('betting-view--active');
+                }
+            });
+        });
+    }
+
+    _setupTableBetting() {
+        const table = document.getElementById('rouletteTable');
+        if (!table) return;
+
+        table.addEventListener('click', (e) => {
+            const cell = e.target.closest('.table__cell');
+            if (!cell || cell.classList.contains('table__cell--outside-spacer')) return;
+
+            const betType = cell.dataset.betType;
+            if (!betType) return;
+
+            if (bettingManager.isLocked || rouletteEngine.state !== 'betting') {
+                showToast('Aguarde a próxima rodada para apostar!', 'error');
+                return;
+            }
+
+            const amount = bettingManager.betAmount;
+            if (amount <= 0) {
+                showToast('Insira um valor para apostar!', 'warning');
+                return;
+            }
+
+            const balance = this.userBalance;
+            if (amount > balance) {
+                showToast('Saldo insuficiente!', 'error');
+                return;
+            }
+
+            // Determine what color/bet to place
+            let color = null;
+            if (betType === 'straight') {
+                const num = parseInt(cell.dataset.number);
+                color = CONFIG.ROULETTE.NUMBERS[num];
+            } else if (betType === 'color') {
+                color = cell.dataset.color;
+            } else if (betType === 'parity') {
+                // Odd/Even maps to a color group for simplicity; placed as red or black
+                // Odd: 1,3,5,7,9,11,13 | Even: 2,4,6,8,10,12,14
+                color = cell.dataset.parity === 'odd' ? 'red' : 'black';
+            }
+
+            if (color) {
+                bettingManager.placeBet(color);
+                this._placeChipOnCell(cell, amount);
+            }
+        });
+    }
+
+    _placeChipOnCell(cell, amount) {
+        // Remove existing chip on this cell
+        const existing = cell.querySelector('.table__chip');
+        if (existing) existing.remove();
+
+        const chip = document.createElement('div');
+        chip.className = 'table__chip table__chip--self';
+
+        // Format chip label
+        let label;
+        if (amount >= 1000) label = (amount / 1000).toFixed(1) + 'k';
+        else if (amount >= 1) label = amount.toFixed(0);
+        else label = amount.toFixed(2);
+        chip.textContent = label;
+
+        cell.classList.add('table__cell--has-bet');
+        cell.appendChild(chip);
+    }
+
+    clearTableChips() {
+        const table = document.getElementById('rouletteTable');
+        if (!table) return;
+        table.querySelectorAll('.table__chip').forEach(c => c.remove());
+        table.querySelectorAll('.table__cell--has-bet').forEach(c => c.classList.remove('table__cell--has-bet'));
+    }
 
     _setupProfileDropdown() {
         const trigger = document.getElementById('profileTrigger');
@@ -113,6 +219,7 @@ class App {
         // New round started
         wsManager.on('round_start', (data) => {
             playersManager.clearAll();
+            this.clearTableChips();
             bettingManager.unlock();
             rouletteEngine.startBetting(data.betting_time || CONFIG.BETTING.BETTING_TIME);
         });
@@ -132,6 +239,7 @@ class App {
         // Spin the wheel
         wsManager.on('spin', async (data) => {
             bettingManager.lock();
+            casinoWheel.spin(data.winning_number);
             const result = await rouletteEngine.spin(data.winning_number);
             bettingManager.processResult(result.color);
             this.addPreviousRoll(result);
@@ -249,6 +357,7 @@ class App {
         const winningNumber = sequence[Math.floor(Math.random() * sequence.length)];
 
         // Spin!
+        casinoWheel.spin(winningNumber);
         const result = await rouletteEngine.spin(winningNumber);
 
         // Process results
