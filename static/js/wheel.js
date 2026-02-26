@@ -188,14 +188,17 @@ class ChipManager {
             this.selectedValue = value;
             el.classList.add('chip-rack__chip--selected');
             bettingManager.setBetAmount(value);
+            document.body.classList.add('chip-selected');
         } else {
             this.selectedValue = null;
+            document.body.classList.remove('chip-selected');
         }
     }
 
     _deselectAll() {
         this.selectedValue = null;
         document.querySelectorAll('.chip-rack__chip--selected').forEach(c => c.classList.remove('chip-rack__chip--selected'));
+        document.body.classList.remove('chip-selected');
     }
 
     /* ── Drag & Drop ── */
@@ -207,21 +210,27 @@ class ChipManager {
         const value = parseFloat(chipEl.dataset.value);
         this._select(value, chipEl);
 
-        // Create floating chip clone
+        // Create floating chip clone (larger, with color)
         const rect = chipEl.getBoundingClientRect();
         this.dragClone = chipEl.cloneNode(true);
-        this.dragClone.className = 'chip-rack__chip chip-rack__chip--ghost';
+        this.dragClone.className = 'chip-rack__chip chip-rack__chip--ghost ' +
+            Array.from(chipEl.classList).filter(c => c.startsWith('chip--')).join(' ');
+        const ghostSize = Math.max(rect.width, 56);
         Object.assign(this.dragClone.style, {
             position: 'fixed',
             zIndex: '9999',
             pointerEvents: 'none',
-            width: rect.width + 'px',
-            height: rect.height + 'px',
+            width: ghostSize + 'px',
+            height: ghostSize + 'px',
             transition: 'none',
-            opacity: '0.9',
+            opacity: '0.92',
         });
         document.body.appendChild(this.dragClone);
         this._positionClone(e);
+
+        // Add drag state
+        document.body.classList.add('chip-dragging');
+        this._highlightDropTargets(true);
 
         const move = (ev) => { ev.preventDefault(); this._positionClone(ev); };
         const end = (ev) => {
@@ -242,8 +251,26 @@ class ChipManager {
         if (!this.dragClone) return;
         const x = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
         const y = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
-        this.dragClone.style.left = (x - 24) + 'px';
-        this.dragClone.style.top = (y - 24) + 'px';
+        const halfSize = this.dragClone.offsetWidth / 2 || 28;
+        this.dragClone.style.left = (x - halfSize) + 'px';
+        this.dragClone.style.top = (y - halfSize) + 'px';
+
+        // Detect cell under cursor for drag-over highlight
+        // Temporarily hide clone to use elementFromPoint
+        this.dragClone.style.display = 'none';
+        const el = document.elementFromPoint(x, y);
+        this.dragClone.style.display = '';
+
+        // Remove previous drag-over
+        const prev = document.querySelector('.table__cell--drag-over');
+        if (prev) prev.classList.remove('table__cell--drag-over');
+
+        if (el) {
+            const cell = el.closest('.table__cell:not(.table__cell--outside-spacer)');
+            if (cell && cell.dataset.betType) {
+                cell.classList.add('table__cell--drag-over');
+            }
+        }
     }
 
     _dragEnd(e) {
@@ -254,12 +281,34 @@ class ChipManager {
         this.dragClone.remove();
         this.dragClone = null;
 
+        // Remove drag state
+        document.body.classList.remove('chip-dragging');
+        this._highlightDropTargets(false);
+
+        // Remove any lingering drag-over
+        const dragOver = document.querySelector('.table__cell--drag-over');
+        if (dragOver) dragOver.classList.remove('table__cell--drag-over');
+
         // Find the element under cursor
         const target = document.elementFromPoint(x, y);
         if (target) {
             const cell = target.closest('.table__cell:not(.table__cell--outside-spacer)');
             if (cell) cell.click(); // Trigger bet
         }
+    }
+
+    /* ── Drop Target Highlighting ── */
+
+    _highlightDropTargets(show) {
+        const cells = document.querySelectorAll('.table__cell[data-bet-type]');
+        cells.forEach(cell => {
+            if (cell.classList.contains('table__cell--outside-spacer')) return;
+            if (show) {
+                cell.classList.add('table__cell--drop-target');
+            } else {
+                cell.classList.remove('table__cell--drop-target');
+            }
+        });
     }
 
     /* ── Table Hover when chip selected ── */

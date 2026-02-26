@@ -51,7 +51,7 @@ class App {
         const table = document.getElementById('rouletteTable');
         if (!table) return;
 
-        table.addEventListener('click', (e) => {
+        table.addEventListener('click', async (e) => {
             const cell = e.target.closest('.table__cell');
             if (!cell || cell.classList.contains('table__cell--outside-spacer')) return;
 
@@ -65,7 +65,7 @@ class App {
 
             const amount = bettingManager.betAmount;
             if (amount <= 0) {
-                showToast('Insira um valor para apostar!', 'warning');
+                showToast('Selecione uma ficha para apostar!', 'warning');
                 return;
             }
 
@@ -75,37 +75,69 @@ class App {
             }
 
             // Route to correct bet type
+            let betPlaced = false;
             if (betType === 'straight') {
                 const num = parseInt(cell.dataset.number);
-                bettingManager.placeBet('straight', num);
-                this._placeChipOnCell(cell, amount);
+                betPlaced = await bettingManager.placeBet('straight', num);
             } else if (betType === 'color') {
                 const color = cell.dataset.color;
-                bettingManager.placeBet('color', color);
-                this._placeChipOnCell(cell, amount);
+                betPlaced = await bettingManager.placeBet('color', color);
             } else if (betType === 'parity') {
                 const parity = cell.dataset.parity;
-                bettingManager.placeBet('parity', parity);
+                betPlaced = await bettingManager.placeBet('parity', parity);
+            }
+
+            if (betPlaced) {
                 this._placeChipOnCell(cell, amount);
             }
         });
     }
 
+    _getChipColor(value) {
+        if (value >= 1000) return 'purple';
+        if (value >= 500) return 'gold';
+        if (value >= 100) return 'black';
+        if (value >= 25) return 'green';
+        if (value >= 5) return 'red';
+        if (value >= 1) return 'blue';
+        return 'white';
+    }
+
     _placeChipOnCell(cell, amount) {
-        const existing = cell.querySelector('.table__chip');
-        if (existing) existing.remove();
+        const currentTotal = parseFloat(cell.dataset.betTotal || '0');
+        const newTotal = currentTotal + amount;
+        cell.dataset.betTotal = newTotal;
 
-        const chip = document.createElement('div');
-        chip.className = 'table__chip table__chip--self';
+        // Update or create chip visual
+        let chip = cell.querySelector('.table__chip');
+        if (!chip) {
+            chip = document.createElement('div');
+            chip.className = 'table__chip table__chip--self';
+            cell.appendChild(chip);
+        }
 
+        // Update chip color to match the selected chip
+        const colorClass = 'table__chip--' + this._getChipColor(amount);
+        chip.className = 'table__chip table__chip--self ' + colorClass;
+
+        // Format label
         let label;
-        if (amount >= 1000) label = (amount / 1000).toFixed(1) + 'k';
-        else if (amount >= 1) label = amount.toFixed(0);
-        else label = amount.toFixed(2);
+        if (newTotal >= 1000) label = (newTotal / 1000).toFixed(1) + 'k';
+        else if (newTotal >= 1) label = newTotal.toFixed(0);
+        else label = newTotal.toFixed(2);
         chip.textContent = label;
 
+        // Re-trigger bounce animation
+        chip.style.animation = 'none';
+        void chip.offsetWidth;
+        chip.style.animation = '';
+
+        // Stacking visual: deeper shadow for higher totals
+        if (newTotal > amount) {
+            chip.classList.add('table__chip--stacked');
+        }
+
         cell.classList.add('table__cell--has-bet');
-        cell.appendChild(chip);
     }
 
     clearTableChips() {
@@ -113,6 +145,7 @@ class App {
         if (!table) return;
         table.querySelectorAll('.table__chip').forEach(c => c.remove());
         table.querySelectorAll('.table__cell--has-bet').forEach(c => c.classList.remove('table__cell--has-bet'));
+        table.querySelectorAll('[data-bet-total]').forEach(c => delete c.dataset.betTotal);
     }
 
     _setupProfileDropdown() {

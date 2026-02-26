@@ -67,47 +67,39 @@ class BettingManager {
         // Common validations
         if (this.isLocked) {
             showToast('Apostas estão fechadas!', 'error');
-            return;
+            return false;
         }
         if (rouletteEngine.state !== 'betting') {
             showToast('Aguarde a próxima rodada!', 'error');
-            return;
+            return false;
         }
         if (this.betAmount <= 0) {
-            showToast('Insira um valor para apostar!', 'warning');
-            return;
+            showToast('Selecione uma ficha para apostar!', 'warning');
+            return false;
         }
         if (this.betAmount < CONFIG.BETTING.MIN_BET) {
             showToast(`Aposta mínima: R$ ${CONFIG.BETTING.MIN_BET.toFixed(2)}`, 'warning');
-            return;
+            return false;
         }
 
         const balance = app ? app.userBalance : 0;
         if (this.betAmount > balance) {
             showToast('Saldo insuficiente!', 'error');
-            return;
+            return false;
         }
 
-        // Check duplicates
-        if (betType === 'color' && this.currentBets[betValue]) {
-            showToast('Você já apostou nesta cor!', 'warning');
-            return;
-        }
-        if (betType === 'parity' && this.currentBets[betValue]) {
-            showToast('Você já apostou em ' + (betValue === 'odd' ? 'Ímpar' : 'Par') + '!', 'warning');
-            return;
-        }
-        if (betType === 'straight' && this.currentBets.straight[betValue] !== undefined) {
-            showToast(`Você já apostou no número ${betValue}!`, 'warning');
-            return;
-        }
-
-        // Max payout check
+        // Max payout check (accumulated total + new bet)
         const multiplier = this._getMultiplier(betType, betValue);
         const maxFromPayout = CONFIG.BETTING.MAX_PAYOUT / multiplier;
-        if (this.betAmount > maxFromPayout) {
+        let existingAmount = 0;
+        if (betType === 'straight' && this.currentBets.straight[betValue]) {
+            existingAmount = this.currentBets.straight[betValue].amount;
+        } else if (betType !== 'straight' && this.currentBets[betValue]) {
+            existingAmount = this.currentBets[betValue].amount;
+        }
+        if (existingAmount + this.betAmount > maxFromPayout) {
             showToast(`Aposta máxima: R$ ${maxFromPayout.toFixed(2)}`, 'warning');
-            return;
+            return false;
         }
 
         // Place bet
@@ -118,21 +110,27 @@ class BettingManager {
                 await this._placeRealBet(betType, betValue);
             }
             soundEngine.chipPlace();
+            return true;
         } catch (error) {
             showToast(error.message || 'Erro ao realizar aposta', 'error');
+            return false;
         }
     }
 
     _placeDemoBet(betType, betValue) {
-        const bet = { amount: this.betAmount, timestamp: Date.now() };
-
-        // Store bet
+        // Accumulate bet (add to existing if already placed)
         if (betType === 'straight') {
-            this.currentBets.straight[betValue] = bet;
-        } else if (betType === 'parity') {
-            this.currentBets[betValue] = bet;
+            if (this.currentBets.straight[betValue]) {
+                this.currentBets.straight[betValue].amount += this.betAmount;
+            } else {
+                this.currentBets.straight[betValue] = { amount: this.betAmount, timestamp: Date.now() };
+            }
         } else {
-            this.currentBets[betValue] = bet;
+            if (this.currentBets[betValue]) {
+                this.currentBets[betValue].amount += this.betAmount;
+            } else {
+                this.currentBets[betValue] = { amount: this.betAmount, timestamp: Date.now() };
+            }
         }
 
         // Deduct balance
@@ -166,14 +164,20 @@ class BettingManager {
 
     async _placeRealBet(betType, betValue) {
         const response = await api.placeBet(betValue, this.betAmount);
-        const bet = { id: response.bet_id, amount: this.betAmount, timestamp: Date.now() };
 
+        // Accumulate bet
         if (betType === 'straight') {
-            this.currentBets.straight[betValue] = bet;
-        } else if (betType === 'parity') {
-            this.currentBets[betValue] = bet;
+            if (this.currentBets.straight[betValue]) {
+                this.currentBets.straight[betValue].amount += this.betAmount;
+            } else {
+                this.currentBets.straight[betValue] = { id: response.bet_id, amount: this.betAmount, timestamp: Date.now() };
+            }
         } else {
-            this.currentBets[betValue] = bet;
+            if (this.currentBets[betValue]) {
+                this.currentBets[betValue].amount += this.betAmount;
+            } else {
+                this.currentBets[betValue] = { id: response.bet_id, amount: this.betAmount, timestamp: Date.now() };
+            }
         }
 
         if (app && response.balance !== undefined) app.updateBalance(response.balance);

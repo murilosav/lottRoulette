@@ -154,8 +154,10 @@ class RouletteEngine {
             void this.strip.offsetWidth; // Force reflow
             this.strip.style.transform = `translateX(${translateX}px)`;
 
-            // On animation complete
-            setTimeout(() => {
+            // Use transitionend for precise sync instead of setTimeout
+            const onTransitionEnd = () => {
+                this.strip.removeEventListener('transitionend', onTransitionEnd);
+
                 const color = NUMBERS[winningNumber];
 
                 this.setState('result');
@@ -170,12 +172,29 @@ class RouletteEngine {
                 this._highlightWinner(targetIndex);
 
                 resolve({ number: winningNumber, color });
-            }, SPIN_DURATION + 300);
+            };
+            this.strip.addEventListener('transitionend', onTransitionEnd);
+
+            // Fallback timeout in case transitionend doesn't fire
+            setTimeout(() => {
+                this.strip.removeEventListener('transitionend', onTransitionEnd);
+                onTransitionEnd();
+            }, SPIN_DURATION + 500);
         });
     }
 
     /**
-     * Show the ROLLING overlay with a decrementing countdown
+     * Approximate the cubic-bezier(0.12, 0.8, 0.08, 1) easing.
+     * Maps linear time (0-1) to animation progress (0-1).
+     */
+    _spinEasing(t) {
+        // Aggressive ease-out matching the CSS cubic-bezier
+        return 1 - Math.pow(1 - t, 3.5);
+    }
+
+    /**
+     * Show the ROLLING overlay with an eased countdown
+     * that matches the visual deceleration of the spin
      */
     _startRollingCountdown(durationMs) {
         if (!this.rollingOverlay || !this.rollingCountdown) return;
@@ -190,7 +209,11 @@ class RouletteEngine {
         clearInterval(this.countdownInterval);
         this.countdownInterval = setInterval(() => {
             const elapsed = (Date.now() - startTime) / 1000;
-            const remaining = Math.max(0, totalSeconds - elapsed);
+            const t = Math.min(1, elapsed / totalSeconds);
+
+            // Apply easing so countdown matches visual deceleration
+            const easedProgress = this._spinEasing(t);
+            const remaining = Math.max(0, totalSeconds * (1 - easedProgress));
             this.rollingCountdown.textContent = remaining.toFixed(2);
 
             if (remaining <= 0) {

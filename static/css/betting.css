@@ -11,17 +11,36 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 0;
-    background: none;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md);
     font-weight: 700;
     font-size: 0.95rem;
     letter-spacing: 0.3px;
     text-transform: uppercase;
-    transition: opacity var(--transition-fast);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .panel__bet-btn:hover:not(:disabled) {
-    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.panel__bet-btn--red:hover:not(:disabled) {
+    box-shadow: 0 0 12px rgba(232, 64, 62, 0.2);
+    border-color: rgba(232, 64, 62, 0.3);
+}
+
+.panel__bet-btn--white:hover:not(:disabled) {
+    box-shadow: 0 0 12px rgba(212, 160, 23, 0.2);
+    border-color: rgba(212, 160, 23, 0.3);
+}
+
+.panel__bet-btn--black:hover:not(:disabled) {
+    box-shadow: 0 0 12px rgba(160, 160, 200, 0.15);
+    border-color: rgba(160, 160, 200, 0.2);
 }
 
 .panel__bet-btn:active:not(:disabled) {
@@ -30,6 +49,7 @@
 
 .panel__bet-btn--disabled {
     opacity: 0.35 !important;
+    cursor: not-allowed;
 }
 
 /* Icon circles in button (like CSGOEmpire) */
