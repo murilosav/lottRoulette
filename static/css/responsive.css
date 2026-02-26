@@ -9,7 +9,6 @@
     }
 
     .roulette__viewport { height: 105px; }
-
     .livestream__embed { aspect-ratio: 21 / 9; }
 }
 
@@ -68,9 +67,10 @@
     }
 
     .bet-action {
-        height: 34px;
-        padding: 0 10px;
-        font-size: 0.75rem;
+        height: 38px;
+        padding: 0 12px;
+        font-size: 0.78rem;
+        min-width: 44px;
     }
 
     /* Panels stack */
@@ -80,6 +80,9 @@
     }
 
     .panel { min-height: 240px; }
+
+    /* View toggle */
+    .view-toggle { max-width: 220px; }
 }
 
 @media (max-width: 480px) {
@@ -110,14 +113,19 @@
     .header__balance { padding: 3px 3px 3px 10px; height: 34px; }
     .balance__deposit { width: 26px; height: 26px; }
 
-    .bet-action { height: 32px; padding: 0 8px; font-size: 0.7rem; }
+    .bet-action {
+        height: 36px;
+        padding: 0 10px;
+        font-size: 0.72rem;
+        min-width: 40px;
+    }
 
     /* Livestream */
     .livestream__embed { aspect-ratio: 16 / 9; max-height: 200px; }
     .livestream__topbar { padding: 6px 10px; }
     .livestream__badge { font-size: 0.6rem; padding: 2px 7px; }
     .livestream__viewers { font-size: 0.7rem; }
-    .livestream__action-btn { width: 28px; height: 28px; font-size: 0.7rem; }
+    .livestream__action-btn { width: 30px; height: 30px; font-size: 0.7rem; }
 
     .placeholder__features { gap: 5px; }
     .placeholder__feature { font-size: 0.65rem; padding: 3px 8px; }
@@ -135,10 +143,27 @@
     .player-entry__level { font-size: 0.58rem; padding: 1px 3px; }
 
     .toast { max-width: calc(100vw - 30px); font-size: 0.78rem; padding: 8px 12px; }
+
+    /* Livestream collapsed by default on mobile via JS */
 }
 
+/* Touch devices: larger tap targets */
 @media (hover: none) {
-    .bet-action:hover { background: var(--bg-tertiary); color: var(--text-secondary); border-color: var(--border-color); }
+    .bet-action {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .bet-action:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        border-color: var(--border-color);
+    }
+
     .player-entry:hover { background: transparent; }
     .roll:hover { transform: none; }
+
+    .table__cell { min-height: 48px; }
+
+    .chip-rack__chip { width: 44px; height: 44px; }
 }

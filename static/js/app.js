@@ -13,11 +13,8 @@ class App {
         this.demoRoundTimeout = null;
     }
 
-    /**
-     * Initialize the entire application
-     */
     async init() {
-        console.log('🎰 Roleta Casino — Initializing...');
+        console.log('Roleta Casino — Initializing...');
 
         // Initialize components
         rouletteEngine.init();
@@ -25,15 +22,17 @@ class App {
         playersManager.init();
         casinoWheel.init();
         chipManager.init();
+        chatManager.init();
 
-        // Setup UI interactions
+        // Setup UI
         this._setupProfileDropdown();
         this._setupSoundToggle();
         this._setupLivestreamToggle();
         this._setupViewToggle();
         this._setupTableBetting();
+        this._setupHistoryPanel();
 
-        // Connect to backend or start demo
+        // Connect or demo
         if (CONFIG.DEMO_MODE) {
             this._initDemoMode();
         } else {
@@ -42,7 +41,7 @@ class App {
             await this._loadInitialData();
         }
 
-        console.log('🎰 Roleta Casino — Ready!');
+        console.log('Roleta Casino — Ready!');
     }
 
     /* ═══════════════════════════════════════════
@@ -60,12 +59,9 @@ class App {
         btns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const view = btn.dataset.view;
-
-                // Update active button
                 btns.forEach(b => b.classList.remove('view-toggle__btn--active'));
                 btn.classList.add('view-toggle__btn--active');
 
-                // Toggle views
                 if (view === 'modern') {
                     modernView.classList.add('betting-view--active');
                     classicView.classList.remove('betting-view--active');
@@ -99,41 +95,35 @@ class App {
                 return;
             }
 
-            const balance = this.userBalance;
-            if (amount > balance) {
+            if (amount > this.userBalance) {
                 showToast('Saldo insuficiente!', 'error');
                 return;
             }
 
-            // Determine what color/bet to place
-            let color = null;
+            // Route to correct bet type
             if (betType === 'straight') {
                 const num = parseInt(cell.dataset.number);
-                color = CONFIG.ROULETTE.NUMBERS[num];
+                bettingManager.placeBet('straight', num);
+                this._placeChipOnCell(cell, amount);
             } else if (betType === 'color') {
-                color = cell.dataset.color;
+                const color = cell.dataset.color;
+                bettingManager.placeBet('color', color);
+                this._placeChipOnCell(cell, amount);
             } else if (betType === 'parity') {
-                // Odd/Even maps to a color group for simplicity; placed as red or black
-                // Odd: 1,3,5,7,9,11,13 | Even: 2,4,6,8,10,12,14
-                color = cell.dataset.parity === 'odd' ? 'red' : 'black';
-            }
-
-            if (color) {
-                bettingManager.placeBet(color);
+                const parity = cell.dataset.parity;
+                bettingManager.placeBet('parity', parity);
                 this._placeChipOnCell(cell, amount);
             }
         });
     }
 
     _placeChipOnCell(cell, amount) {
-        // Remove existing chip on this cell
         const existing = cell.querySelector('.table__chip');
         if (existing) existing.remove();
 
         const chip = document.createElement('div');
         chip.className = 'table__chip table__chip--self';
 
-        // Format chip label
         let label;
         if (amount >= 1000) label = (amount / 1000).toFixed(1) + 'k';
         else if (amount >= 1) label = amount.toFixed(0);
@@ -154,7 +144,6 @@ class App {
     _setupProfileDropdown() {
         const trigger = document.getElementById('profileTrigger');
         const dropdown = document.getElementById('profileDropdown');
-
         if (!trigger || !dropdown) return;
 
         trigger.addEventListener('click', (e) => {
@@ -172,27 +161,30 @@ class App {
     _setupSoundToggle() {
         const btn = document.getElementById('soundToggle');
         const icon = document.getElementById('soundIcon');
-
         if (!btn) return;
 
         btn.addEventListener('click', () => {
             this.soundEnabled = !this.soundEnabled;
             icon.className = this.soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
             rouletteEngine.soundEnabled = this.soundEnabled;
+            soundEngine.enabled = this.soundEnabled;
         });
     }
 
     _setupLivestreamToggle() {
         const toggle = document.getElementById('livestreamToggle');
         const livestream = document.getElementById('livestream');
-
         if (!toggle || !livestream) return;
+
+        // Collapse on mobile by default
+        if (window.innerWidth <= 768) {
+            livestream.classList.add('livestream--collapsed');
+        }
 
         toggle.addEventListener('click', () => {
             livestream.classList.toggle('livestream--collapsed');
         });
 
-        // Fullscreen button
         const fsBtn = document.getElementById('fullscreenBtn');
         const embed = document.getElementById('livestreamEmbed');
         if (fsBtn && embed) {
@@ -205,18 +197,25 @@ class App {
             });
         }
 
-        // Simulate viewer count changes in demo mode
-        if (CONFIG.DEMO_MODE) {
-            this._simulateViewerCount();
-        }
+        if (CONFIG.DEMO_MODE) this._simulateViewerCount();
+    }
+
+    _setupHistoryPanel() {
+        const header = document.getElementById('historyToggle');
+        const panel = document.getElementById('historyPanel');
+        if (!header || !panel) return;
+
+        header.addEventListener('click', () => {
+            panel.classList.toggle('history-panel--open');
+            this._renderHistory();
+        });
     }
 
     /* ═══════════════════════════════════════════
-       WebSocket Integration (Real Backend)
+       WebSocket Integration
        ═══════════════════════════════════════════ */
 
     _setupWebSocketListeners() {
-        // New round started
         wsManager.on('round_start', (data) => {
             playersManager.clearAll();
             this.clearTableChips();
@@ -224,67 +223,43 @@ class App {
             rouletteEngine.startBetting(data.betting_time || CONFIG.BETTING.BETTING_TIME);
         });
 
-        // Another player placed a bet
         wsManager.on('bet_placed', (data) => {
             if (data.player && data.color) {
                 playersManager.addPlayer(data.color, data.player);
             }
         });
 
-        // Betting phase closed
         wsManager.on('betting_closed', () => {
             bettingManager.lock();
         });
 
-        // Spin the wheel
         wsManager.on('spin', async (data) => {
             bettingManager.lock();
             casinoWheel.spin(data.winning_number);
             const result = await rouletteEngine.spin(data.winning_number);
-            bettingManager.processResult(result.color);
-            this.addPreviousRoll(result);
+            this._onSpinComplete(result);
         });
 
-        // Balance updated from server
         wsManager.on('balance_update', (data) => {
-            if (data.balance !== undefined) {
-                this.updateBalance(data.balance);
-            }
+            if (data.balance !== undefined) this.updateBalance(data.balance);
         });
 
-        // Error from server
         wsManager.on('error', (data) => {
             showToast(data.message || 'Erro do servidor', 'error');
         });
 
-        // Connection status
-        wsManager.on('connected', () => {
-            showToast('Conectado ao servidor', 'success');
-        });
-
-        wsManager.on('disconnected', () => {
-            showToast('Conexão perdida. Reconectando...', 'warning');
-        });
-
-        wsManager.on('reconnect_failed', () => {
-            showToast('Não foi possível reconectar. Recarregue a página.', 'error');
-        });
+        wsManager.on('connected', () => showToast('Conectado ao servidor', 'success'));
+        wsManager.on('disconnected', () => showToast('Conexão perdida. Reconectando...', 'warning'));
+        wsManager.on('reconnect_failed', () => showToast('Não foi possível reconectar.', 'error'));
     }
 
-    /**
-     * Load initial data from REST API
-     */
     async _loadInitialData() {
         try {
             const [profile, balanceData, history] = await Promise.all([
-                api.getProfile(),
-                api.getBalance(),
-                api.getHistory(),
+                api.getProfile(), api.getBalance(), api.getHistory(),
             ]);
-
             this.setProfile(profile);
             this.updateBalance(balanceData.balance || balanceData.amount || 0);
-
             if (history && history.results) {
                 history.results.forEach(roll => {
                     this.addPreviousRoll({
@@ -294,8 +269,8 @@ class App {
                 });
             }
         } catch (error) {
-            console.error('Failed to load initial data:', error);
-            showToast('Erro ao carregar dados do servidor', 'error');
+            console.error('Failed to load:', error);
+            showToast('Erro ao carregar dados', 'error');
         }
     }
 
@@ -304,20 +279,10 @@ class App {
        ═══════════════════════════════════════════ */
 
     _initDemoMode() {
-        console.log('🎲 Demo mode active');
-
-        // Set demo profile
-        this.setProfile({
-            username: 'Jogador_Demo',
-            avatar: null,
-            level: 42
-        });
+        console.log('Demo mode active');
+        this.setProfile({ username: 'Jogador_Demo', avatar: null, level: 42 });
         this.updateBalance(5000.00);
-
-        // Generate some previous roll history
         this._generateDemoHistory();
-
-        // Start the game loop
         this._startDemoRound();
     }
 
@@ -331,44 +296,75 @@ class App {
     }
 
     async _startDemoRound() {
-        // Clear previous round
         playersManager.clearAll();
+        this.clearTableChips();
         bettingManager.unlock();
 
         const bettingTime = CONFIG.BETTING.BETTING_TIME;
-
-        // Start betting countdown
         rouletteEngine.startBetting(bettingTime);
-
-        // Simulate other players betting during the phase
         this._generateDemoPlayers(bettingTime);
 
-        // Wait for betting to end
+        // Countdown sound in last 5 seconds
+        for (let i = 5; i > 0; i--) {
+            setTimeout(() => {
+                if (rouletteEngine.state === 'betting' && this.soundEnabled) {
+                    soundEngine.countdown();
+                }
+            }, (bettingTime - i) * 1000);
+        }
+
         await this._sleep(bettingTime * 1000);
-
-        // Lock bets
         bettingManager.lock();
-
-        // Small pause before spinning
         await this._sleep(500);
 
-        // Generate random winning number
         const sequence = CONFIG.ROULETTE.SEQUENCE;
         const winningNumber = sequence[Math.floor(Math.random() * sequence.length)];
 
-        // Spin!
+        // Spin both
         casinoWheel.spin(winningNumber);
         const result = await rouletteEngine.spin(winningNumber);
 
-        // Process results
-        bettingManager.processResult(result.color);
+        // Process result
+        this._onSpinComplete(result);
+
+        await this._sleep(CONFIG.ROULETTE.RESULT_DISPLAY_TIME);
+        this._startDemoRound();
+    }
+
+    /**
+     * Called after spin animation completes
+     */
+    _onSpinComplete(result) {
+        const betResult = bettingManager.processResult(result.number, result.color);
+
+        // Show result display overlay
+        this._showResultDisplay(result, betResult);
+
+        // Add to history
         this.addPreviousRoll(result);
 
-        // Wait before next round
-        await this._sleep(CONFIG.ROULETTE.RESULT_DISPLAY_TIME);
+        // Chat reaction
+        chatManager.onResult(result.number, result.color);
 
-        // Next round
-        this._startDemoRound();
+        // Sound feedback
+        if (this.soundEnabled) {
+            if (betResult.totalWin > betResult.totalBet * 5) {
+                soundEngine.bigWin();
+            } else if (betResult.totalWin > 0) {
+                soundEngine.win();
+            } else if (betResult.hadBets) {
+                soundEngine.loss();
+            }
+        }
+
+        // If big win, announce in chat
+        if (betResult.totalWin > 100) {
+            const username = this.userProfile?.username || 'Jogador';
+            chatManager.onBigWin(username, betResult.totalWin);
+        }
+
+        // Render history panel
+        this._renderHistory();
     }
 
     _generateDemoPlayers(bettingTimeSec) {
@@ -378,22 +374,15 @@ class App {
 
         for (let i = 0; i < numPlayers; i++) {
             const delay = 300 + Math.random() * (bettingTimeSec * 900);
-
             setTimeout(() => {
                 if (rouletteEngine.state !== 'betting') return;
 
-                // Pick color (white is rarer)
                 let color;
                 const rand = Math.random();
-                if (rand < 0.1) {
-                    color = 'white';
-                } else if (rand < 0.55) {
-                    color = 'red';
-                } else {
-                    color = 'black';
-                }
+                if (rand < 0.1) color = 'white';
+                else if (rand < 0.55) color = 'red';
+                else color = 'black';
 
-                // Pick unique name
                 let name;
                 do {
                     name = names[Math.floor(Math.random() * names.length)];
@@ -415,17 +404,139 @@ class App {
     }
 
     /* ═══════════════════════════════════════════
+       Result Display + Win Animation
+       ═══════════════════════════════════════════ */
+
+    _showResultDisplay(result, betResult) {
+        const overlay = document.getElementById('resultDisplay');
+        const numEl = document.getElementById('resultNumber');
+        const colorEl = document.getElementById('resultColor');
+        const outcomeEl = document.getElementById('resultOutcome');
+        if (!overlay || !numEl) return;
+
+        // Set number and color
+        numEl.textContent = result.number;
+        numEl.className = `result-display__number result-display__number--${result.color}`;
+        colorEl.textContent = CONFIG.COLOR_NAMES[result.color];
+
+        // Set outcome
+        if (betResult.hadBets) {
+            if (betResult.totalWin > 0) {
+                const profit = betResult.totalWin - betResult.totalBet;
+                outcomeEl.textContent = `+R$ ${betResult.totalWin.toFixed(2)}`;
+                outcomeEl.className = 'result-display__outcome result-display__outcome--win';
+                overlay.classList.add('result-display--win');
+
+                // Confetti!
+                this._spawnConfetti();
+
+                // Floating win amount
+                this._showFloatingWin(betResult.totalWin);
+            } else {
+                outcomeEl.textContent = `-R$ ${betResult.totalBet.toFixed(2)}`;
+                outcomeEl.className = 'result-display__outcome result-display__outcome--loss';
+                overlay.classList.remove('result-display--win');
+            }
+        } else {
+            outcomeEl.textContent = '';
+            outcomeEl.className = 'result-display__outcome result-display__outcome--none';
+            overlay.classList.remove('result-display--win');
+        }
+
+        // Show
+        overlay.classList.add('result-display--visible');
+
+        // Auto-hide
+        setTimeout(() => {
+            overlay.classList.remove('result-display--visible', 'result-display--win');
+        }, 3500);
+    }
+
+    _spawnConfetti() {
+        const colors = ['#e84040', '#f2b10c', '#00c74d', '#4488ee', '#9955dd', '#ff6b6b', '#ffd700'];
+        const count = 40;
+
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'confetti-particle';
+
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const left = Math.random() * 100;
+            const size = 4 + Math.random() * 8;
+            const duration = 1.5 + Math.random() * 2;
+            const delay = Math.random() * 0.8;
+            const shape = Math.random() > 0.5 ? '50%' : '0';
+
+            Object.assign(particle.style, {
+                left: left + 'vw',
+                top: '-10px',
+                width: size + 'px',
+                height: size + 'px',
+                background: color,
+                borderRadius: shape,
+                animationDuration: duration + 's',
+                animationDelay: delay + 's',
+            });
+
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), (duration + delay) * 1000 + 200);
+        }
+    }
+
+    _showFloatingWin(amount) {
+        const el = document.createElement('div');
+        el.className = 'floating-win';
+        el.textContent = `+R$ ${amount.toFixed(2)}`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2200);
+    }
+
+    /* ═══════════════════════════════════════════
+       History Panel
+       ═══════════════════════════════════════════ */
+
+    _renderHistory() {
+        const list = document.getElementById('historyList');
+        if (!list) return;
+
+        const history = bettingManager.history;
+
+        if (history.length === 0) {
+            list.innerHTML = `
+                <div class="history-panel__empty">
+                    <i class="fas fa-dice"></i>
+                    Nenhuma aposta realizada ainda
+                </div>
+            `;
+            return;
+        }
+
+        list.innerHTML = history.map(entry => {
+            const profitClass = entry.profit >= 0 ? 'history__profit--win' : 'history__profit--loss';
+            const profitSign = entry.profit >= 0 ? '+' : '';
+            const betLabels = entry.bets.map(b => b.type).join(', ');
+
+            return `
+                <div class="history__entry">
+                    <span class="history__round">#${entry.round}</span>
+                    <span class="history__result-num history__result-num--${entry.color}">${entry.number}</span>
+                    <span class="history__bet-type">${betLabels}</span>
+                    <span class="history__amount">R$ ${entry.totalBet.toFixed(2)}</span>
+                    <span class="history__profit ${profitClass}">${profitSign}R$ ${entry.profit.toFixed(2)}</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    /* ═══════════════════════════════════════════
        UI Updates
        ═══════════════════════════════════════════ */
 
     setProfile(profile) {
         this.userProfile = profile;
-
         const nameEl = document.getElementById('profileName');
         const avatarEl = document.getElementById('profileAvatar');
-
         if (nameEl) nameEl.textContent = profile.username;
-
         if (avatarEl) {
             avatarEl.src = profile.avatar || playersManager._getDefaultAvatar(profile.username);
         }
@@ -433,7 +544,6 @@ class App {
 
     updateBalance(amount) {
         this.userBalance = Math.round(amount * 100) / 100;
-
         const el = document.getElementById('balanceAmount');
         if (el) {
             el.textContent = this.userBalance.toLocaleString('pt-BR', {
@@ -445,18 +555,12 @@ class App {
         }
     }
 
-    /**
-     * Add a roll result to the previous rolls display
-     */
     addPreviousRoll(result) {
         this.previousRolls.unshift(result);
         if (this.previousRolls.length > CONFIG.MAX_PREVIOUS_ROLLS) {
             this.previousRolls.pop();
         }
-
-        // Update stats
         this.rollsStats[result.color]++;
-
         this._renderPreviousRolls();
         this._renderStats();
     }
@@ -464,19 +568,13 @@ class App {
     _renderPreviousRolls() {
         const container = document.getElementById('rollsList');
         if (!container) return;
-
         container.innerHTML = '';
-
         this.previousRolls.forEach((roll, index) => {
             const el = document.createElement('div');
             el.className = `roll roll--${roll.color}`;
             el.textContent = roll.number;
             el.title = `#${roll.number} — ${CONFIG.COLOR_NAMES[roll.color]}`;
-
-            if (index === 0) {
-                el.style.animationDelay = '0s';
-            }
-
+            if (index === 0) el.style.animationDelay = '0s';
             container.appendChild(el);
         });
     }
@@ -485,30 +583,22 @@ class App {
         const statsRed = document.getElementById('statsRed');
         const statsWhite = document.getElementById('statsWhite');
         const statsBlack = document.getElementById('statsBlack');
-
         if (statsRed) statsRed.textContent = this.rollsStats.red;
         if (statsWhite) statsWhite.textContent = this.rollsStats.white;
         if (statsBlack) statsBlack.textContent = this.rollsStats.black;
     }
 
-    /**
-     * Simulate viewer count fluctuations in demo mode
-     */
     _simulateViewerCount() {
         const el = document.getElementById('viewerCount');
         if (!el) return;
-
         let viewers = 800 + Math.floor(Math.random() * 600);
         el.textContent = viewers.toLocaleString('pt-BR');
-
         setInterval(() => {
             const delta = Math.floor((Math.random() - 0.45) * 30);
             viewers = Math.max(300, viewers + delta);
             el.textContent = viewers.toLocaleString('pt-BR');
         }, 3000);
     }
-
-    /* ── Helpers ── */
 
     _sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -539,27 +629,17 @@ function showToast(message, type = 'info') {
     `;
 
     container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('toast--visible'));
 
-    // Trigger entrance animation
-    requestAnimationFrame(() => {
-        toast.classList.add('toast--visible');
-    });
-
-    // Auto remove after 4 seconds
     setTimeout(() => {
         toast.classList.remove('toast--visible');
-        setTimeout(() => {
-            if (toast.parentNode) toast.remove();
-        }, 300);
+        setTimeout(() => { if (toast.parentNode) toast.remove(); }, 300);
     }, 4000);
 }
 
 /* ═══════════════════════════════════════════
-   Initialize Application
+   Initialize
    ═══════════════════════════════════════════ */
 
 const app = new App();
-
-document.addEventListener('DOMContentLoaded', () => {
-    app.init();
-});
+document.addEventListener('DOMContentLoaded', () => app.init());
