@@ -1,7 +1,11 @@
 /* ============================================
    Responsive - Roleta Casino
+   Complete responsive overhaul for all elements
    ============================================ */
 
+/* ════════════════════════════════════════════
+   TABLET — max 1024px
+   ════════════════════════════════════════════ */
 @media (max-width: 1024px) {
     :root {
         --item-size: 75px;
@@ -9,15 +13,24 @@
     }
 
     .roulette__viewport { height: 105px; }
+
+    /* Livestream */
     .livestream__embed { aspect-ratio: 21 / 9; }
+    .livestream__placeholder { min-height: 180px; }
 }
 
+/* ════════════════════════════════════════════
+   MOBILE — max 768px
+   ════════════════════════════════════════════ */
 @media (max-width: 768px) {
     .container { padding: 0 10px; }
 
+    /* Header */
     .profile__name { display: none; }
     .profile__trigger > i:last-child { display: none; }
+    .header__right { gap: 8px; }
 
+    /* Roulette spinner items */
     :root {
         --item-size: 60px;
         --item-gap: 8px;
@@ -28,12 +41,14 @@
     .roulette__viewport::after { width: 80px; }
     .roulette__number { font-size: 1.1rem; }
 
+    /* Rolling overlay */
     .rolling__countdown { font-size: 1.5rem; }
     .rolling__label { font-size: 0.5rem; letter-spacing: 1.5px; }
 
     /* Livestream */
-    .livestream__embed { aspect-ratio: 16 / 9; max-height: 280px; }
+    .livestream__embed { aspect-ratio: 16 / 9; max-height: 260px; }
     .livestream__title { display: none; }
+    .livestream__placeholder { min-height: 160px; }
 
     .placeholder__icon-ring { width: 56px; height: 56px; }
     .placeholder__icon-ring-inner { width: 40px; height: 40px; }
@@ -45,17 +60,34 @@
     .placeholder__glow--2 { width: 100px; height: 100px; }
     .placeholder__glow--3 { width: 110px; height: 110px; }
 
+    /* Previous rolls */
     .previous-rolls {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: 8px;
-        justify-content: center;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 8px 0;
     }
+    .previous-rolls::-webkit-scrollbar { display: none; }
+    .previous-rolls__label { flex-shrink: 0; }
+    .previous-rolls__stats { flex-shrink: 0; }
+    .roll { width: 26px; height: 26px; font-size: 0.62rem; }
 
-    .roll { width: 24px; height: 24px; font-size: 0.6rem; }
+    /* Status text */
+    .status__text { font-size: 0.78rem; }
 
-
+    /* History panel */
+    .history-panel__header { padding: 10px 14px; font-size: 0.78rem; }
+    .history__entry { gap: 6px; padding: 6px 8px; font-size: 0.72rem; }
+    .history__amount { min-width: 55px; font-size: 0.7rem; }
+    .history__profit { min-width: 60px; font-size: 0.72rem; }
 }
 
+/* ════════════════════════════════════════════
+   SMALL MOBILE — max 480px
+   ════════════════════════════════════════════ */
 @media (max-width: 480px) {
     :root {
         --item-size: 48px;
@@ -63,67 +95,137 @@
         --header-height: 50px;
     }
 
-    .roulette__viewport { height: 72px; }
+    .container { padding: 0 8px; }
+
+    /* Header compact */
+    .header__logo span { font-size: 0.95rem; }
+    .header__logo i { font-size: 1rem; }
+    .header__logo { gap: 6px; }
+    .header__inner { padding: 0 10px; }
+    .header__right { gap: 6px; }
+    .balance__amount { font-size: 0.82rem; min-width: 45px; }
+    .header__balance { padding: 3px 3px 3px 10px; height: 34px; gap: 6px; }
+    .balance__deposit { width: 26px; height: 26px; }
+    .profile__trigger { padding: 4px 6px 4px 4px; gap: 4px; }
+    .profile__avatar { width: 28px; height: 28px; }
+
+    /* Main spacing */
+    .main { padding-top: calc(var(--header-height) + 8px); padding-bottom: 24px; }
+
+    /* Roulette spinner */
+    .roulette { margin-bottom: 10px; }
+    .roulette__viewport { height: 68px; }
     .roulette__viewport::before,
-    .roulette__viewport::after { width: 40px; }
-    .roulette__number { font-size: 0.9rem; }
-
-    .rolling__countdown { font-size: 1.2rem; }
-    .rolling__label { font-size: 0.45rem; letter-spacing: 1px; }
-
+    .roulette__viewport::after { width: 35px; }
+    .roulette__number { font-size: 0.85rem; }
     .roulette__indicator::before {
         border-left-width: 6px;
         border-right-width: 6px;
         border-top-width: 9px;
     }
 
-    .header__logo span { font-size: 0.95rem; }
-    .header__logo i { font-size: 1rem; }
+    /* Rolling overlay */
+    .rolling__countdown { font-size: 1.15rem; }
+    .rolling__label { font-size: 0.45rem; letter-spacing: 1px; }
 
-    .balance__amount { font-size: 0.82rem; min-width: 45px; }
-    .header__balance { padding: 3px 3px 3px 10px; height: 34px; }
-    .balance__deposit { width: 26px; height: 26px; }
+    /* Status text */
+    .roulette__status { margin-top: 6px; }
+    .status__text { font-size: 0.72rem; }
 
     /* Livestream */
+    .livestream { margin-bottom: 10px; }
     .livestream__embed { aspect-ratio: 16 / 9; max-height: 200px; }
     .livestream__topbar { padding: 6px 10px; }
+    .livestream__info { gap: 8px; }
     .livestream__badge { font-size: 0.6rem; padding: 2px 7px; }
     .livestream__viewers { font-size: 0.7rem; }
-    .livestream__action-btn { width: 30px; height: 30px; font-size: 0.7rem; }
-
+    .livestream__action-btn { width: 28px; height: 28px; font-size: 0.68rem; }
+    .livestream__placeholder { min-height: 130px; }
+    .placeholder__center { padding: 16px; }
     .placeholder__features { gap: 5px; }
     .placeholder__feature { font-size: 0.65rem; padding: 3px 8px; }
     .placeholder__table { bottom: 8px; }
     .mini-slot { width: 14px; height: 14px; }
     .placeholder__subtitle { display: none; }
 
-    .panel__bet-btn { font-size: 0.85rem; padding: 8px 12px; }
-    .panel__bet-btn i { width: 28px; height: 28px; font-size: 0.75rem; }
+    /* Previous rolls */
+    .previous-rolls { gap: 6px; margin-bottom: 8px; padding: 6px 0; }
+    .previous-rolls__label { font-size: 0.6rem; letter-spacing: 1px; }
+    .roll { width: 24px; height: 24px; font-size: 0.58rem; }
+    .previous-rolls__stats { gap: 8px; }
+    .stats__item { font-size: 0.7rem; gap: 3px; }
+    .stats__item--last { font-size: 0.6rem; }
+    .stats__dot { width: 8px; height: 8px; }
 
-    .table-players { grid-template-columns: 1fr; }
+    /* Bet buttons */
+    .panel__bet-btn { font-size: 0.82rem; padding: 6px 10px; }
+    .panel__bet-btn i { width: 26px; height: 26px; font-size: 0.7rem; }
 
-    .player-entry { padding: 6px 10px; }
-    .player-entry__avatar { width: 26px; height: 26px; }
-    .player-entry__name { font-size: 0.78rem; }
-    .player-entry__amount { font-size: 0.8rem; }
-    .player-entry__level { font-size: 0.6rem; padding: 2px 4px; }
+    /* Player panels */
+    .table-players { grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
+    .table-players__header { padding: 8px 12px; }
+    .table-players__info { padding: 6px 12px; }
+    .panel__multiplier { font-size: 0.7rem; }
+    .panel__bets-count { font-size: 0.7rem; }
+    .panel__bets-total { font-size: 0.78rem; }
 
-    .toast { max-width: calc(100vw - 20px); font-size: 0.8rem; padding: 10px 14px; }
+    /* Player entries */
+    .player-entry { padding: 5px 10px; }
+    .player-entry__avatar { width: 24px; height: 24px; }
+    .player-entry__name { font-size: 0.75rem; }
+    .player-entry__amount { font-size: 0.78rem; }
+    .player-entry__level { font-size: 0.58rem; padding: 1px 4px; }
+    .table-players__list { min-height: 80px; max-height: 150px; }
 
-    /* Chip rack: horizontal scroll on mobile */
+    /* Chip rack */
     .chip-rack {
         justify-content: flex-start;
-        padding: 10px 12px;
+        padding: 10px 10px;
     }
     .chip-rack__chip { flex-shrink: 0; }
 
-    /* Livestream collapsed by default on mobile via JS */
+    /* Toast */
+    .toast-container { right: 8px; }
+    .toast { max-width: calc(100vw - 16px); font-size: 0.78rem; padding: 8px 12px; }
+
+    /* History panel */
+    .history-panel { margin-top: 10px; }
+    .history-panel__header { padding: 10px 12px; font-size: 0.75rem; }
+    .history__entry { gap: 5px; padding: 5px 6px; font-size: 0.68rem; }
+    .history__round { min-width: 28px; font-size: 0.6rem; }
+    .history__result-num { width: 24px; height: 24px; font-size: 0.6rem; }
+    .history__amount { min-width: 50px; font-size: 0.65rem; }
+    .history__profit { min-width: 55px; font-size: 0.68rem; }
 }
 
-/* Touch devices: larger tap targets */
+/* ════════════════════════════════════════════
+   VERY SMALL — max 360px
+   ════════════════════════════════════════════ */
+@media (max-width: 360px) {
+    :root {
+        --item-size: 40px;
+        --item-gap: 5px;
+    }
+
+    .roulette__viewport { height: 58px; }
+    .roulette__number { font-size: 0.75rem; }
+
+    .rolling__countdown { font-size: 1rem; }
+
+    .livestream__badge-dot { display: none; }
+    .livestream__viewers span { display: none; }
+
+    .previous-rolls__label { display: none; }
+    .previous-rolls__stats .stats__item--last { display: none; }
+}
+
+/* ════════════════════════════════════════════
+   TOUCH DEVICES — larger tap targets
+   ════════════════════════════════════════════ */
 @media (hover: none) {
     .player-entry:hover { background: transparent; }
     .roll:hover { transform: none; }
+    .chip-rack__chip:hover { transform: none; }
 
     .table__cell { min-height: 48px; }
 

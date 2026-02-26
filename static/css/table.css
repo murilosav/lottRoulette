@@ -695,3 +695,21 @@ body.chip-selected .table__cell[data-bet-type] {
     .chip-rack { gap: 6px; padding: 10px 8px; }
     .chip-rack__label { display: none; }
 }
+
+@media (max-width: 360px) {
+    .wheel__outer { width: 120px; height: 120px; }
+    .wheel__pointer { border-left-width: 6px; border-right-width: 6px; border-top-width: 10px; top: -6px; }
+
+    .roulette-table { padding: 5px; }
+    .table__grid { grid-template-columns: 28px repeat(10, 1fr) 24px; }
+    .table__cell { min-height: 36px; font-size: 0.62rem; }
+    .table__cell-number { font-size: 0.85rem; }
+    .table__cell--outside { min-height: 28px; font-size: 0.48rem; }
+    .table__outside { grid-template-columns: 28px repeat(5, 1fr); }
+
+    .table__chip { width: 22px; height: 22px; font-size: 0.38rem; }
+
+    .chip-rack__chip { width: 38px; height: 38px; font-size: 0.55rem; }
+    .chip-rack { gap: 5px; padding: 8px 6px; }
+    .chip-rack__clear { font-size: 0.65rem; padding: 6px 12px; }
+}

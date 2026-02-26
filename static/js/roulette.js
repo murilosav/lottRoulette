@@ -132,10 +132,15 @@ class RouletteEngine {
 
             clearInterval(this.bettingInterval);
 
-            const { ITEM_SIZE, ITEM_GAP, SEQUENCE, SPIN_DURATION, STRIP_REPETITIONS, NUMBERS } = CONFIG.ROULETTE;
-            const itemWidth = ITEM_SIZE + ITEM_GAP;
+            const { SEQUENCE, SPIN_DURATION, STRIP_REPETITIONS, NUMBERS } = CONFIG.ROULETTE;
+
+            // Measure actual rendered item size (CSS vars change on mobile)
+            const firstItem = this.items[0]?.element;
+            const actualItemSize = firstItem ? firstItem.offsetWidth : CONFIG.ROULETTE.ITEM_SIZE;
+            const computedGap = parseFloat(getComputedStyle(this.strip).gap) || CONFIG.ROULETTE.ITEM_GAP;
+            const itemWidth = actualItemSize + computedGap;
             const viewportWidth = this.viewport.offsetWidth;
-            const centerOffset = viewportWidth / 2 - ITEM_SIZE / 2;
+            const centerOffset = viewportWidth / 2 - actualItemSize / 2;
 
             // Target position: second-to-last repetition
             const sequenceLength = SEQUENCE.length;

@@ -183,10 +183,7 @@ class App {
         const livestream = document.getElementById('livestream');
         if (!toggle || !livestream) return;
 
-        // Collapse on mobile by default
-        if (window.innerWidth <= 768) {
-            livestream.classList.add('livestream--collapsed');
-        }
+        // Livestream always open by default (no auto-collapse)
 
         toggle.addEventListener('click', () => {
             livestream.classList.toggle('livestream--collapsed');
