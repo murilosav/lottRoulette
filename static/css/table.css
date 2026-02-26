@@ -2,48 +2,6 @@
    Classic Casino View — Wheel + Table + Chips
    ============================================ */
 
-/* ── View Toggle ── */
-.view-toggle {
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    margin-bottom: 14px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 4px;
-    max-width: 260px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.view-toggle__btn {
-    flex: 1;
-    padding: 7px 16px;
-    border-radius: var(--radius-sm);
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    transition: all var(--transition-fast);
-}
-
-.view-toggle__btn:hover { color: var(--text-secondary); }
-
-.view-toggle__btn--active {
-    background: var(--bg-tertiary);
-    color: var(--text-bright);
-    box-shadow: var(--shadow-sm);
-}
-
-/* ── View visibility ── */
-.betting-view { display: none; }
-.betting-view--active { display: block; }
-.betting-view--modern.betting-view--active {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-}
-
 /* ════════════════════════════════════════════
    CLASSIC VIEW LAYOUT
    Wheel left + Table right on desktop
@@ -193,7 +151,7 @@
 /* ── Grid ── */
 .table__grid {
     display: grid;
-    grid-template-columns: 60px repeat(7, 1fr) 52px;
+    grid-template-columns: 60px repeat(10, 1fr) 52px;
     grid-template-rows: 1fr 1fr;
 }
 
@@ -277,13 +235,13 @@
 
 .table__cell--side-top {
     grid-row: 1;
-    grid-column: 9;
+    grid-column: 12;
     border-radius: 0 var(--radius-sm) 0 0;
 }
 
 .table__cell--side-bottom {
     grid-row: 2;
-    grid-column: 9;
+    grid-column: 12;
     border-radius: 0 0 var(--radius-sm) 0;
 }
 
@@ -573,49 +531,31 @@
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 10px 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .table-players__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 6px;
-    padding-bottom: 6px;
+    padding: 10px 14px;
+}
+
+.table-players__info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-top: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
 }
 
-.table-players__color {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
-.table-players__color-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-}
-
-.table-players__color-dot--red { background: var(--color-red); }
-.table-players__color-dot--gold { background: var(--color-white); }
-.table-players__color-dot--black { background: var(--color-black); }
-
-.table-players__total {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text-bright);
-}
-
-.table-players__total i { color: var(--color-gold); font-size: 0.65rem; }
-
 .table-players__list {
-    max-height: 150px;
+    flex: 1;
+    min-height: 120px;
+    max-height: 200px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--border-light) transparent;
@@ -641,8 +581,8 @@
 
     .roulette-table { padding: 10px; border-width: 2px; }
 
-    .table__grid { grid-template-columns: 46px repeat(7, 1fr) 40px; }
-    .table__cell { min-height: 44px; font-size: 0.88rem; }
+    .table__grid { grid-template-columns: 46px repeat(10, 1fr) 40px; }
+    .table__cell { min-height: 44px; font-size: 0.8rem; }
     .table__cell-number { font-size: 1.15rem; }
     .table__cell-label { font-size: 0.48rem; }
     .table__cell--side { font-size: 0.52rem; }
@@ -662,11 +602,11 @@
     .wheel__pointer { border-left-width: 8px; border-right-width: 8px; border-top-width: 14px; top: -8px; }
 
     .roulette-table { padding: 6px; border-radius: var(--radius-sm); }
-    .table__grid { grid-template-columns: 34px repeat(7, 1fr) 30px; }
-    .table__cell { min-height: 36px; font-size: 0.75rem; border-width: 1px; }
+    .table__grid { grid-template-columns: 30px repeat(10, 1fr) 26px; }
+    .table__cell { min-height: 36px; font-size: 0.65rem; border-width: 1px; }
     .table__cell-number { font-size: 0.95rem; }
     .table__cell--outside { min-height: 28px; font-size: 0.52rem; }
-    .table__outside { grid-template-columns: 34px repeat(5, 1fr); }
+    .table__outside { grid-template-columns: 30px repeat(5, 1fr); }
 
     .chip-rack__chip { width: 36px; height: 36px; font-size: 0.58rem; border-width: 2px; }
     .chip-rack__label { display: none; }

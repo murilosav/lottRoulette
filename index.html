@@ -231,108 +231,8 @@
                 </div>
             </div>
 
-            <!-- ────── Bet Amount Input ────── -->
-            <div class="bet-input" id="betInput">
-                <div class="bet-input__field">
-                    <i class="fas fa-coins bet-input__icon"></i>
-                    <input
-                        type="number"
-                        class="bet-input__amount"
-                        id="betAmount"
-                        placeholder="Valor da aposta..."
-                        min="0.01"
-                        step="0.01"
-                        autocomplete="off"
-                    >
-                </div>
-                <div class="bet-input__actions">
-                    <button class="bet-action" data-action="clear">LIMPAR</button>
-                    <button class="bet-action" data-action="add" data-value="0.01">+0.01</button>
-                    <button class="bet-action" data-action="add" data-value="0.1">+0.1</button>
-                    <button class="bet-action" data-action="add" data-value="1">+1</button>
-                    <button class="bet-action" data-action="add" data-value="10">+10</button>
-                    <button class="bet-action" data-action="add" data-value="100">+100</button>
-                    <button class="bet-action" data-action="half">1/2</button>
-                    <button class="bet-action" data-action="double">X2</button>
-                    <button class="bet-action" data-action="max">MAX</button>
-                </div>
-            </div>
-
-            <!-- ────── View Toggle ────── -->
-            <div class="view-toggle" id="viewToggle">
-                <button class="view-toggle__btn view-toggle__btn--active" data-view="modern">Moderno</button>
-                <button class="view-toggle__btn" data-view="classic">Clássico</button>
-            </div>
-
-            <!-- ════════ VIEW: MODERN (CSGOEmpire panels) ════════ -->
-            <div class="betting-panels betting-view betting-view--modern betting-view--active" id="bettingPanels">
-
-                <!-- RED Panel -->
-                <div class="panel panel--red" id="panelRed">
-                    <div class="panel__header">
-                        <button class="panel__bet-btn panel__bet-btn--red" id="betRed" data-color="red">
-                            <i class="fas fa-fire"></i>
-                            <span>APOSTAR</span>
-                        </button>
-                        <span class="panel__multiplier">PAGA 2x</span>
-                    </div>
-                    <div class="panel__info">
-                        <span class="panel__bets-count">
-                            <span id="redBetsCount">0</span> Apostas Total
-                        </span>
-                        <span class="panel__bets-total">
-                            <i class="fas fa-coins"></i>
-                            <span id="redBetsTotal">0.00</span>
-                        </span>
-                    </div>
-                    <div class="panel__players" id="redPlayers"></div>
-                </div>
-
-                <!-- WHITE Panel (Special - 20x) -->
-                <div class="panel panel--white" id="panelWhite">
-                    <div class="panel__header">
-                        <button class="panel__bet-btn panel__bet-btn--white" id="betWhite" data-color="white">
-                            <i class="fas fa-star"></i>
-                            <span>APOSTAR</span>
-                        </button>
-                        <span class="panel__multiplier panel__multiplier--white">PAGA 20x</span>
-                    </div>
-                    <div class="panel__info">
-                        <span class="panel__bets-count">
-                            <span id="whiteBetsCount">0</span> Apostas Total
-                        </span>
-                        <span class="panel__bets-total">
-                            <i class="fas fa-coins"></i>
-                            <span id="whiteBetsTotal">0.00</span>
-                        </span>
-                    </div>
-                    <div class="panel__players" id="whitePlayers"></div>
-                </div>
-
-                <!-- BLACK Panel -->
-                <div class="panel panel--black" id="panelBlack">
-                    <div class="panel__header">
-                        <button class="panel__bet-btn panel__bet-btn--black" id="betBlack" data-color="black">
-                            <i class="fas fa-moon"></i>
-                            <span>APOSTAR</span>
-                        </button>
-                        <span class="panel__multiplier">PAGA 2x</span>
-                    </div>
-                    <div class="panel__info">
-                        <span class="panel__bets-count">
-                            <span id="blackBetsCount">0</span> Apostas Total
-                        </span>
-                        <span class="panel__bets-total">
-                            <i class="fas fa-coins"></i>
-                            <span id="blackBetsTotal">0.00</span>
-                        </span>
-                    </div>
-                    <div class="panel__players" id="blackPlayers"></div>
-                </div>
-            </div>
-
-            <!-- ════════ VIEW: CLASSIC (Casino table) ════════ -->
-            <div class="betting-view betting-view--classic" id="classicView">
+            <!-- ════════ Casino Table View ════════ -->
+            <div id="classicView">
 
                 <div class="classic-layout">
                     <!-- Spinning Roulette Wheel -->
@@ -350,10 +250,10 @@
                                 <!-- Zero (spans 2 rows) -->
                                 <div class="table__cell table__cell--zero" data-bet-type="straight" data-number="0">
                                     <span class="table__cell-number">0</span>
-                                    <span class="table__cell-label">20x</span>
+                                    <span class="table__cell-label">14x</span>
                                 </div>
 
-                                <!-- Row 1: Red (1-7) -->
+                                <!-- Row 1: Red (1-10) -->
                                 <div class="table__cell table__cell--red" data-bet-type="straight" data-number="1">1</div>
                                 <div class="table__cell table__cell--red" data-bet-type="straight" data-number="2">2</div>
                                 <div class="table__cell table__cell--red" data-bet-type="straight" data-number="3">3</div>
@@ -361,6 +261,9 @@
                                 <div class="table__cell table__cell--red" data-bet-type="straight" data-number="5">5</div>
                                 <div class="table__cell table__cell--red" data-bet-type="straight" data-number="6">6</div>
                                 <div class="table__cell table__cell--red" data-bet-type="straight" data-number="7">7</div>
+                                <div class="table__cell table__cell--red" data-bet-type="straight" data-number="8">8</div>
+                                <div class="table__cell table__cell--red" data-bet-type="straight" data-number="9">9</div>
+                                <div class="table__cell table__cell--red" data-bet-type="straight" data-number="10">10</div>
 
                                 <!-- Side: Red row bet -->
                                 <div class="table__cell table__cell--side table__cell--side-top" data-bet-type="color" data-color="red">
@@ -368,14 +271,17 @@
                                     2x
                                 </div>
 
-                                <!-- Row 2: Black (8-14) -->
-                                <div class="table__cell table__cell--black" data-bet-type="straight" data-number="8">8</div>
-                                <div class="table__cell table__cell--black" data-bet-type="straight" data-number="9">9</div>
-                                <div class="table__cell table__cell--black" data-bet-type="straight" data-number="10">10</div>
+                                <!-- Row 2: Black (11-20) -->
                                 <div class="table__cell table__cell--black" data-bet-type="straight" data-number="11">11</div>
                                 <div class="table__cell table__cell--black" data-bet-type="straight" data-number="12">12</div>
                                 <div class="table__cell table__cell--black" data-bet-type="straight" data-number="13">13</div>
                                 <div class="table__cell table__cell--black" data-bet-type="straight" data-number="14">14</div>
+                                <div class="table__cell table__cell--black" data-bet-type="straight" data-number="15">15</div>
+                                <div class="table__cell table__cell--black" data-bet-type="straight" data-number="16">16</div>
+                                <div class="table__cell table__cell--black" data-bet-type="straight" data-number="17">17</div>
+                                <div class="table__cell table__cell--black" data-bet-type="straight" data-number="18">18</div>
+                                <div class="table__cell table__cell--black" data-bet-type="straight" data-number="19">19</div>
+                                <div class="table__cell table__cell--black" data-bet-type="straight" data-number="20">20</div>
 
                                 <!-- Side: Black row bet -->
                                 <div class="table__cell table__cell--side table__cell--side-bottom" data-bet-type="color" data-color="black">
@@ -389,7 +295,7 @@
                                 <div class="table__cell table__cell--outside table__cell--outside-spacer"></div>
                                 <div class="table__cell table__cell--outside" data-bet-type="parity" data-parity="odd">ÍMPAR</div>
                                 <div class="table__cell table__cell--outside table__cell--red-bet" data-bet-type="color" data-color="red">VERMELHO</div>
-                                <div class="table__cell table__cell--outside table__cell--gold-bet" data-bet-type="color" data-color="white">BRANCO 20x</div>
+                                <div class="table__cell table__cell--outside table__cell--gold-bet" data-bet-type="color" data-color="white">BRANCO 14x</div>
                                 <div class="table__cell table__cell--outside table__cell--black-bet" data-bet-type="color" data-color="black">PRETO</div>
                                 <div class="table__cell table__cell--outside" data-bet-type="parity" data-parity="even">PAR</div>
                             </div>
@@ -431,46 +337,52 @@
                     </button>
                 </div>
 
-                <!-- Players Summary (compact, below table) -->
+                <!-- Players Panels (with bet buttons + info) -->
                 <div class="table-players">
+                    <!-- RED Panel -->
                     <div class="table-players__panel">
                         <div class="table-players__header">
-                            <span class="table-players__color">
-                                <span class="table-players__color-dot table-players__color-dot--red"></span>
-                                Vermelho
-                            </span>
-                            <span class="table-players__total">
-                                <i class="fas fa-coins"></i>
-                                <span id="redBetsTotalClassic">0.00</span>
-                            </span>
+                            <button class="panel__bet-btn panel__bet-btn--red" id="betRed" data-color="red">
+                                <i class="fas fa-fire"></i>
+                                <span>APOSTAR</span>
+                            </button>
+                            <span class="panel__multiplier">PAGA 2x</span>
                         </div>
-                        <div class="table-players__list" id="redPlayersClassic"></div>
+                        <div class="table-players__info">
+                            <span class="panel__bets-count"><span id="redBetsCount">0</span> Apostas Total</span>
+                            <span class="panel__bets-total"><i class="fas fa-coins"></i><span id="redBetsTotal">0.00</span></span>
+                        </div>
+                        <div class="table-players__list" id="redPlayers"></div>
                     </div>
+                    <!-- WHITE Panel -->
                     <div class="table-players__panel">
                         <div class="table-players__header">
-                            <span class="table-players__color">
-                                <span class="table-players__color-dot table-players__color-dot--gold"></span>
-                                Branco
-                            </span>
-                            <span class="table-players__total">
-                                <i class="fas fa-coins"></i>
-                                <span id="whiteBetsTotalClassic">0.00</span>
-                            </span>
+                            <button class="panel__bet-btn panel__bet-btn--white" id="betWhite" data-color="white">
+                                <i class="fas fa-star"></i>
+                                <span>APOSTAR</span>
+                            </button>
+                            <span class="panel__multiplier panel__multiplier--white">PAGA 20x</span>
                         </div>
-                        <div class="table-players__list" id="whitePlayersClassic"></div>
+                        <div class="table-players__info">
+                            <span class="panel__bets-count"><span id="whiteBetsCount">0</span> Apostas Total</span>
+                            <span class="panel__bets-total"><i class="fas fa-coins"></i><span id="whiteBetsTotal">0.00</span></span>
+                        </div>
+                        <div class="table-players__list" id="whitePlayers"></div>
                     </div>
+                    <!-- BLACK Panel -->
                     <div class="table-players__panel">
                         <div class="table-players__header">
-                            <span class="table-players__color">
-                                <span class="table-players__color-dot table-players__color-dot--black"></span>
-                                Preto
-                            </span>
-                            <span class="table-players__total">
-                                <i class="fas fa-coins"></i>
-                                <span id="blackBetsTotalClassic">0.00</span>
-                            </span>
+                            <button class="panel__bet-btn panel__bet-btn--black" id="betBlack" data-color="black">
+                                <i class="fas fa-moon"></i>
+                                <span>APOSTAR</span>
+                            </button>
+                            <span class="panel__multiplier">PAGA 2x</span>
                         </div>
-                        <div class="table-players__list" id="blackPlayersClassic"></div>
+                        <div class="table-players__info">
+                            <span class="panel__bets-count"><span id="blackBetsCount">0</span> Apostas Total</span>
+                            <span class="panel__bets-total"><i class="fas fa-coins"></i><span id="blackBetsTotal">0.00</span></span>
+                        </div>
+                        <div class="table-players__list" id="blackPlayers"></div>
                     </div>
                 </div>
             </div>

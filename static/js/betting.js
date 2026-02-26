@@ -6,7 +6,6 @@
 class BettingManager {
     constructor() {
         this.betAmount = 0;
-        this.betInput = null;
 
         // Tracks bets per type for current round
         this.currentBets = {
@@ -26,30 +25,10 @@ class BettingManager {
     }
 
     init() {
-        this.betInput = document.getElementById('betAmount');
-        this._setupQuickActions();
         this._setupBetButtons();
-        this._setupInputListeners();
     }
 
     /* ── Setup ── */
-
-    _setupQuickActions() {
-        document.querySelectorAll('.bet-action').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const action = btn.dataset.action;
-                const value = parseFloat(btn.dataset.value) || 0;
-
-                switch (action) {
-                    case 'clear': this.setBetAmount(0); break;
-                    case 'add': this.setBetAmount(this.betAmount + value); break;
-                    case 'half': this.setBetAmount(this.betAmount / 2); break;
-                    case 'double': this.setBetAmount(this.betAmount * 2); break;
-                    case 'max': this.setBetAmount(this._getMaxBet()); break;
-                }
-            });
-        });
-    }
 
     _setupBetButtons() {
         ['red', 'white', 'black'].forEach(color => {
@@ -61,23 +40,10 @@ class BettingManager {
         });
     }
 
-    _setupInputListeners() {
-        if (!this.betInput) return;
-        this.betInput.addEventListener('input', () => {
-            this.betAmount = parseFloat(this.betInput.value) || 0;
-        });
-        this.betInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { e.preventDefault(); this.betInput.blur(); }
-        });
-    }
-
     /* ── Bet Amount ── */
 
     setBetAmount(amount) {
         this.betAmount = Math.max(0, Math.round(amount * 100) / 100);
-        if (this.betInput) {
-            this.betInput.value = this.betAmount > 0 ? this.betAmount.toFixed(2) : '';
-        }
     }
 
     _getMaxBet() {

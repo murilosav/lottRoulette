@@ -120,7 +120,7 @@ class RouletteEngine {
     /**
      * Spin the roulette to a winning number
      * Shows ROLLING overlay with countdown during spin
-     * @param {number} winningNumber - The number to land on (0-14)
+     * @param {number} winningNumber - The number to land on (0-20)
      * @returns {Promise} Resolves with { number, color }
      */
     spin(winningNumber) {

@@ -12,18 +12,18 @@ const CONFIG = {
 
     // Roulette Configuration
     ROULETTE: {
-        // Number to color mapping (0-14)
-        // 0 = White (Branco) - Pays 20x
-        // 1-7 = Red (Vermelho) - Pays 2x
-        // 8-14 = Black (Preto) - Pays 2x
+        // Number to color mapping (0-20)
+        // 0 = White (Branco) - Pays 14x
+        // 1-10 = Red (Vermelho) - Pays 2x
+        // 11-20 = Black (Preto) - Pays 2x
         NUMBERS: {
             0: 'white',
-            1: 'red', 2: 'red', 3: 'red', 4: 'red', 5: 'red', 6: 'red', 7: 'red',
-            8: 'black', 9: 'black', 10: 'black', 11: 'black', 12: 'black', 13: 'black', 14: 'black'
+            1: 'red', 2: 'red', 3: 'red', 4: 'red', 5: 'red', 6: 'red', 7: 'red', 8: 'red', 9: 'red', 10: 'red',
+            11: 'black', 12: 'black', 13: 'black', 14: 'black', 15: 'black', 16: 'black', 17: 'black', 18: 'black', 19: 'black', 20: 'black'
         },
 
         // Sequence order on the spinning strip (alternates colors)
-        SEQUENCE: [0, 1, 8, 2, 9, 3, 10, 4, 11, 5, 12, 6, 13, 7, 14],
+        SEQUENCE: [0, 1, 11, 2, 12, 3, 13, 4, 14, 5, 15, 6, 16, 7, 17, 8, 18, 9, 19, 10, 20],
 
         // How many times to repeat the sequence in the strip
         STRIP_REPETITIONS: 7,
@@ -44,7 +44,7 @@ const CONFIG = {
         MULTIPLIERS: {
             red: 2,
             black: 2,
-            white: 20,
+            white: 14,
             straight: 14,  // Single number bet
             odd: 2,
             even: 2

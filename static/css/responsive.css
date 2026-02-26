@@ -52,37 +52,7 @@
 
     .roll { width: 24px; height: 24px; font-size: 0.6rem; }
 
-    /* Bet input stacks */
-    .bet-input {
-        flex-wrap: wrap;
-        max-width: 100%;
-    }
 
-    .bet-input__field { width: 100%; }
-
-    .bet-input__actions {
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .bet-action {
-        height: 38px;
-        padding: 0 12px;
-        font-size: 0.78rem;
-        min-width: 44px;
-    }
-
-    /* Panels stack */
-    .betting-panels {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-
-    .panel { min-height: 240px; }
-
-    /* View toggle */
-    .view-toggle { max-width: 220px; }
 }
 
 @media (max-width: 480px) {
@@ -113,13 +83,6 @@
     .header__balance { padding: 3px 3px 3px 10px; height: 34px; }
     .balance__deposit { width: 26px; height: 26px; }
 
-    .bet-action {
-        height: 36px;
-        padding: 0 10px;
-        font-size: 0.72rem;
-        min-width: 40px;
-    }
-
     /* Livestream */
     .livestream__embed { aspect-ratio: 16 / 9; max-height: 200px; }
     .livestream__topbar { padding: 6px 10px; }
@@ -133,8 +96,10 @@
     .mini-slot { width: 14px; height: 14px; }
     .placeholder__subtitle { display: none; }
 
-    .panel__bet-btn { font-size: 0.85rem; }
-    .panel__bet-btn i { width: 28px; height: 28px; font-size: 0.75rem; }
+    .panel__bet-btn { font-size: 0.82rem; }
+    .panel__bet-btn i { width: 26px; height: 26px; font-size: 0.7rem; }
+
+    .table-players { grid-template-columns: 1fr; }
 
     .player-entry { padding: 5px 10px; }
     .player-entry__avatar { width: 24px; height: 24px; }
@@ -149,17 +114,6 @@
 
 /* Touch devices: larger tap targets */
 @media (hover: none) {
-    .bet-action {
-        min-height: 44px;
-        min-width: 44px;
-    }
-
-    .bet-action:hover {
-        background: var(--bg-tertiary);
-        color: var(--text-secondary);
-        border-color: var(--border-color);
-    }
-
     .player-entry:hover { background: transparent; }
     .roll:hover { transform: none; }
 

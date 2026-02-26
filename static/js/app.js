@@ -28,7 +28,6 @@ class App {
         this._setupProfileDropdown();
         this._setupSoundToggle();
         this._setupLivestreamToggle();
-        this._setupViewToggle();
         this._setupTableBetting();
         this._setupHistoryPanel();
 
@@ -47,31 +46,6 @@ class App {
     /* ═══════════════════════════════════════════
        UI Setup
        ═══════════════════════════════════════════ */
-
-    _setupViewToggle() {
-        const toggleContainer = document.getElementById('viewToggle');
-        if (!toggleContainer) return;
-
-        const btns = toggleContainer.querySelectorAll('.view-toggle__btn');
-        const modernView = document.getElementById('bettingPanels');
-        const classicView = document.getElementById('classicView');
-
-        btns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const view = btn.dataset.view;
-                btns.forEach(b => b.classList.remove('view-toggle__btn--active'));
-                btn.classList.add('view-toggle__btn--active');
-
-                if (view === 'modern') {
-                    modernView.classList.add('betting-view--active');
-                    classicView.classList.remove('betting-view--active');
-                } else {
-                    modernView.classList.remove('betting-view--active');
-                    classicView.classList.add('betting-view--active');
-                }
-            });
-        });
-    }
 
     _setupTableBetting() {
         const table = document.getElementById('rouletteTable');
